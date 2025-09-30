@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Szymanski</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <form id="loginForm" class="form active">
+      <div class="field">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+      </div>
+      <div class="field">
+        <input type="password" id="loginPass" placeholder="Senha" required>
+      </div>
+      <button type="submit" class="btn">Entrar</button>
+      <div id="loginMsg" class="msg"></div>
+    </form>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+  <script type="module" src="auth.js"></script>
+</body>
+</html>
