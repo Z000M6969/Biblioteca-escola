@@ -31,7 +31,16 @@
     .carrossel::-webkit-scrollbar { display:none; }
 
     .livro { flex-shrink:0; background:white; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; padding:10px; }
-    .livro img { width:120px; height:180px; object-fit:cover; border-radius:4px; margin-bottom:8px; }
+    
+    /* Imagens padronizadas com altura maior que largura */
+    .livro img {
+      width: 120px;      /* largura fixa */
+      height: 200px;     /* altura maior que largura */
+      object-fit: cover; /* mantém proporção e corta se necessário */
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    
     .livro p { font-weight:bold; font-size:14px; }
 
     .btn-carrossel { position:absolute; top:50%; transform:translateY(-50%); background:rgba(30,144,255,0.8); color:white; border:none; padding:12px; border-radius:50%; cursor:pointer; font-size:18px; z-index:10; }
@@ -76,7 +85,6 @@
 
     const container = document.getElementById('carrosseisContainer');
 
-    // Função para renderizar carrossel de um gênero
     function renderCarrossel(genero) {
       container.innerHTML = ''; // Limpa container
       if(genero === 'Todos'){
@@ -103,7 +111,7 @@
         const livroDiv = document.createElement('div');
         livroDiv.className = 'livro';
         const img = document.createElement('img');
-        img.src = `capa${j}.jpg`; // ajuste suas imagens reais
+        img.src = `capa${j}.jpg`;
         img.alt = `${g} Livro ${j}`;
         const p = document.createElement('p');
         p.textContent = `${g} Livro ${j}`;
