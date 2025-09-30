@@ -41,7 +41,7 @@
     /* BANNER */
     .banner {
       width: 100%;
-      height: 300px; /* altura do banner */
+      height: 300px; 
       background: url('banner.jpg') center/cover no-repeat;
       display: flex;
       align-items: center;
@@ -94,14 +94,11 @@
       text-align: center;
       padding: 10px;
     }
-    .livro img { width: 100%; border-radius: 4px; margin-bottom: 8px; }
-    .livro p { font-weight: bold; }
+    .livro img { width: 120px; height: 180px; object-fit: cover; border-radius: 4px; margin-bottom: 8px; }
+    .livro p { font-weight: bold; font-size: 14px; }
 
-    /* Primeira seção: imagens maiores */
-    #mais-emprestados .livro { min-width: 180px; }
-
-    /* Segunda seção: imagens menores */
-    #curriculo .livro { min-width: 120px; }
+    /* PRIMEIRA SEÇÃO: MAIS EMPRESTADOS */
+    #mais-emprestados .livro img { width: 140px; height: 200px; }
 
     /* BOTÕES LATERAIS */
     .btn-carrossel {
@@ -173,7 +170,7 @@
       </select>
     </div>
 
-    <!-- PRIMEIRO CARROSSEL: MAIS EMPRESTADOS -->
+    <!-- PRIMEIRO CARROSSEL: MAIS EMPRESTADOS (10 livros) -->
     <section class="genero" id="mais-emprestados">
       <h2>Mais emprestados</h2>
       <div class="carrossel-wrapper">
@@ -183,21 +180,33 @@
           <div class="livro"><img src="capa2.jpg" alt=""><p>Livro 2</p></div>
           <div class="livro"><img src="capa3.jpg" alt=""><p>Livro 3</p></div>
           <div class="livro"><img src="capa4.jpg" alt=""><p>Livro 4</p></div>
+          <div class="livro"><img src="capa5.jpg" alt=""><p>Livro 5</p></div>
+          <div class="livro"><img src="capa6.jpg" alt=""><p>Livro 6</p></div>
+          <div class="livro"><img src="capa7.jpg" alt=""><p>Livro 7</p></div>
+          <div class="livro"><img src="capa8.jpg" alt=""><p>Livro 8</p></div>
+          <div class="livro"><img src="capa9.jpg" alt=""><p>Livro 9</p></div>
+          <div class="livro"><img src="capa10.jpg" alt=""><p>Livro 10</p></div>
         </div>
         <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselMais', 1)">&#10095;</button>
       </div>
     </section>
 
-    <!-- SEGUNDO CARROSSEL: CURRÍCULO ESCOLAR -->
+    <!-- SEGUNDO CARROSSEL: CURRÍCULO ESCOLAR (10 livros) -->
     <section class="genero" id="curriculo">
       <h2>Currículo Escolar</h2>
       <div class="carrossel-wrapper">
         <button class="btn-carrossel btn-left" onclick="scrollCarrossel('carrosselCurriculo', -1)">&#10094;</button>
         <div class="carrossel" id="carrosselCurriculo">
-          <div class="livro"><img src="capa5.jpg" alt=""><p>Livro 5</p></div>
-          <div class="livro"><img src="capa6.jpg" alt=""><p>Livro 6</p></div>
-          <div class="livro"><img src="capa7.jpg" alt=""><p>Livro 7</p></div>
-          <div class="livro"><img src="capa8.jpg" alt=""><p>Livro 8</p></div>
+          <div class="livro"><img src="capa11.jpg" alt=""><p>Livro 11</p></div>
+          <div class="livro"><img src="capa12.jpg" alt=""><p>Livro 12</p></div>
+          <div class="livro"><img src="capa13.jpg" alt=""><p>Livro 13</p></div>
+          <div class="livro"><img src="capa14.jpg" alt=""><p>Livro 14</p></div>
+          <div class="livro"><img src="capa15.jpg" alt=""><p>Livro 15</p></div>
+          <div class="livro"><img src="capa16.jpg" alt=""><p>Livro 16</p></div>
+          <div class="livro"><img src="capa17.jpg" alt=""><p>Livro 17</p></div>
+          <div class="livro"><img src="capa18.jpg" alt=""><p>Livro 18</p></div>
+          <div class="livro"><img src="capa19.jpg" alt=""><p>Livro 19</p></div>
+          <div class="livro"><img src="capa20.jpg" alt=""><p>Livro 20</p></div>
         </div>
         <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselCurriculo', 1)">&#10095;</button>
       </div>
@@ -210,8 +219,7 @@
     const generos = document.querySelectorAll('.genero');
 
     function mostrarGenero() {
-      const valor = generoSelect.value;
-      // Mostra os dois carrosséis sempre
+      // Ambos carrosséis sempre visíveis
       generos.forEach(sec => sec.style.display = 'block');
     }
 
