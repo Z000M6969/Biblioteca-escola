@@ -9,13 +9,21 @@
 <body>
   <div class="container">
     <h2>Login</h2>
+
+    <!-- Logo da escola -->
+    <img src="logo.png" alt="Logo da Escola" class="logo">
+
     <form id="loginForm" class="form active">
+      <div class="field">
+        <input type="text" id="loginCGM" placeholder="CGM" required>
+      </div>
       <div class="field">
         <input type="email" id="loginEmail" placeholder="Email" required>
       </div>
       <div class="field">
         <input type="password" id="loginPass" placeholder="Senha" required>
       </div>
+
       <button type="submit" class="btn">Entrar</button>
       <div id="loginMsg" class="msg"></div>
     </form>
