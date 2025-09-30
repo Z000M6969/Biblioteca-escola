@@ -23,25 +23,18 @@ body {
 
 /* container do login */
 .container {
-  width: 360px;                 /* largura fixa previsível */
-  max-width: calc(100% - 40px); /* responsivo em telas pequenas */
-  padding: 24px;                /* padding interno (já incluído por box-sizing) */
+  width: 360px;
+  max-width: calc(100% - 40px);
+  padding: 32px 28px; /* aumentei o padding interno */
   background: #ffffff;
   border: 2px solid #1e90ff;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(30,144,255,0.12);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   align-items: stretch;
-}
-
-/* título */
-.container h2 {
-  margin: 0;
-  font-size: 20px;
-  text-align: center;
-  color: #1e90ff;
+  box-sizing: border-box;
 }
 
 /* campos */
@@ -53,16 +46,20 @@ body {
   width: 100%;
   padding: 12px;
   font-size: 14px;
-  border: 1px solid rgba(30,144,255,0.2);
+  border: 1px solid rgba(30,144,255,0.4);
   border-radius: 8px;
   outline: none;
   background: #fff;
 }
 
-.field input:focus {
-  border-color: #104e8b;
-  box-shadow: 0 0 6px rgba(30,144,255,0.18);
+/* título */
+.container h2 {
+  margin: 0;
+  font-size: 20px;
+  text-align: center;
+  color: #1e90ff;
 }
+
 
 /* botão */
 .btn {
