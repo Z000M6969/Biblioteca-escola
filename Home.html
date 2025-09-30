@@ -41,7 +41,7 @@
     /* BANNER */
     .banner {
       width: 100%;
-      height: 300px; /* maior altura */
+      height: 300px; /* altura do banner */
       background: url('banner.jpg') center/cover no-repeat;
       display: flex;
       align-items: center;
@@ -71,11 +71,10 @@
       border: 1px solid #ccc;
     }
 
-    /* SEÇÃO DE GÊNERO */
-    .genero { margin-bottom: 60px; display: none; position: relative; width: 100%; max-width: 1000px; }
+    /* SEÇÃO DE CARROSSEL */
+    .genero { margin-bottom: 60px; width: 100%; max-width: 1000px; }
     .genero h2 { margin-bottom: 10px; color: #1e90ff; text-align: left; }
 
-    /* CARROSSEL */
     .carrossel-wrapper { position: relative; width: 100%; }
     .carrossel {
       display: flex;
@@ -95,11 +94,14 @@
       text-align: center;
       padding: 10px;
     }
-
-    /* Imagens maiores para primeiro carrossel */
-    .genero#mais-emprestados .livro { min-width: 180px; }
     .livro img { width: 100%; border-radius: 4px; margin-bottom: 8px; }
     .livro p { font-weight: bold; }
+
+    /* Primeira seção: imagens maiores */
+    #mais-emprestados .livro { min-width: 180px; }
+
+    /* Segunda seção: imagens menores */
+    #curriculo .livro { min-width: 120px; }
 
     /* BOTÕES LATERAIS */
     .btn-carrossel {
@@ -144,10 +146,30 @@
       <label for="generoSelect" style="margin-right:10px;">Escolha o gênero:</label>
       <select id="generoSelect">
         <option value="todos">Todos</option>
-        <option value="mais-emprestados">Mais emprestados</option>
         <option value="aventura">Aventura</option>
         <option value="biografia">Biografia</option>
-        <!-- Adicione outros gêneros -->
+        <option value="classicos">Clássicos</option>
+        <option value="conto">Conto</option>
+        <option value="cronica">Crônica</option>
+        <option value="drama">Drama</option>
+        <option value="educacao">Educação</option>
+        <option value="fantasia">Fantasia</option>
+        <option value="ficcao">Ficção Científica</option>
+        <option value="filosofia">Filosofia</option>
+        <option value="historia">História</option>
+        <option value="humor">Humor</option>
+        <option value="infantil">Infantil</option>
+        <option value="misterio">Mistério</option>
+        <option value="policial">Policial</option>
+        <option value="poesia">Poesia</option>
+        <option value="romance">Romance</option>
+        <option value="terror">Terror</option>
+        <option value="autoajuda">Autoajuda</option>
+        <option value="religiao">Religião</option>
+        <option value="saude">Saúde</option>
+        <option value="tecnologia">Tecnologia</option>
+        <option value="economia">Economia</option>
+        <option value="artes">Artes</option>
       </select>
     </div>
 
@@ -166,16 +188,18 @@
       </div>
     </section>
 
-    <!-- OUTROS GÊNEROS -->
-    <section class="genero" id="aventura">
-      <h2>Aventura</h2>
+    <!-- SEGUNDO CARROSSEL: CURRÍCULO ESCOLAR -->
+    <section class="genero" id="curriculo">
+      <h2>Currículo Escolar</h2>
       <div class="carrossel-wrapper">
-        <button class="btn-carrossel btn-left" onclick="scrollCarrossel('carrosselAventura', -1)">&#10094;</button>
-        <div class="carrossel" id="carrosselAventura">
+        <button class="btn-carrossel btn-left" onclick="scrollCarrossel('carrosselCurriculo', -1)">&#10094;</button>
+        <div class="carrossel" id="carrosselCurriculo">
           <div class="livro"><img src="capa5.jpg" alt=""><p>Livro 5</p></div>
           <div class="livro"><img src="capa6.jpg" alt=""><p>Livro 6</p></div>
+          <div class="livro"><img src="capa7.jpg" alt=""><p>Livro 7</p></div>
+          <div class="livro"><img src="capa8.jpg" alt=""><p>Livro 8</p></div>
         </div>
-        <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselAventura', 1)">&#10095;</button>
+        <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselCurriculo', 1)">&#10095;</button>
       </div>
     </section>
 
@@ -187,14 +211,10 @@
 
     function mostrarGenero() {
       const valor = generoSelect.value;
-      generos.forEach(sec => {
-        if(valor === 'todos' || sec.id === valor){
-          sec.style.display = 'block';
-        } else {
-          sec.style.display = 'none';
-        }
-      });
+      // Mostra os dois carrosséis sempre
+      generos.forEach(sec => sec.style.display = 'block');
     }
+
     generoSelect.addEventListener('change', mostrarGenero);
     mostrarGenero();
 
