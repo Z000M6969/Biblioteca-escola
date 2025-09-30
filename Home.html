@@ -20,6 +20,9 @@
       padding: 10px 20px;
       background: #1e90ff;
       color: white;
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
     header img.logo { height: 50px; }
     nav { display: flex; gap: 20px; }
@@ -35,19 +38,23 @@
     }
     nav a:hover { color: #ffd700; }
 
-    /* BANNER DO BEM-VINDO */
+    /* BANNER */
     .banner {
       width: 100%;
-      background: linear-gradient(90deg, #1e90ff, #104e8b);
-      color: white;
-      padding: 40px 20px;
-      text-align: center;
-      margin-bottom: 20px;
-      border-radius: 12px;
+      height: 300px; /* maior altura */
+      background: url('banner.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+      border-radius: 0;
     }
-    .banner h1 { font-size: 32px; }
+    .banner h1 {
+      color: white;
+      font-size: 36px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    }
 
-    /* CONTEÚDO PRINCIPAL */
     main { padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
     /* FILTRO POR GÊNERO */
@@ -65,11 +72,11 @@
     }
 
     /* SEÇÃO DE GÊNERO */
-    .genero { margin-bottom: 60px; display: none; position: relative; width: 100%; max-width: 900px; }
+    .genero { margin-bottom: 60px; display: none; position: relative; width: 100%; max-width: 1000px; }
     .genero h2 { margin-bottom: 10px; color: #1e90ff; text-align: left; }
 
     /* CARROSSEL */
-    .carrossel-wrapper { position: relative; }
+    .carrossel-wrapper { position: relative; width: 100%; }
     .carrossel {
       display: flex;
       overflow-x: auto;
@@ -78,8 +85,9 @@
       padding: 10px 0;
     }
     .carrossel::-webkit-scrollbar { display: none; }
+
+    /* LIVROS */
     .livro {
-      min-width: 120px;
       flex-shrink: 0;
       background: white;
       border-radius: 8px;
@@ -87,7 +95,11 @@
       text-align: center;
       padding: 10px;
     }
+
+    /* Imagens maiores para primeiro carrossel */
+    .genero#mais-emprestados .livro { min-width: 180px; }
     .livro img { width: 100%; border-radius: 4px; margin-bottom: 8px; }
+    .livro p { font-weight: bold; }
 
     /* BOTÕES LATERAIS */
     .btn-carrossel {
@@ -121,7 +133,7 @@
     </nav>
   </header>
 
-  <!-- BANNER BEM-VINDO -->
+  <!-- BANNER -->
   <div class="banner">
     <h1>Bem-vindo(a) à Biblioteca!</h1>
   </div>
@@ -132,22 +144,36 @@
       <label for="generoSelect" style="margin-right:10px;">Escolha o gênero:</label>
       <select id="generoSelect">
         <option value="todos">Todos</option>
+        <option value="mais-emprestados">Mais emprestados</option>
         <option value="aventura">Aventura</option>
         <option value="biografia">Biografia</option>
-        <option value="classicos">Clássicos</option>
-        <!-- Adicione os outros gêneros -->
+        <!-- Adicione outros gêneros -->
       </select>
     </div>
 
-    <!-- EXEMPLO DE CARROSSEL -->
+    <!-- PRIMEIRO CARROSSEL: MAIS EMPRESTADOS -->
+    <section class="genero" id="mais-emprestados">
+      <h2>Mais emprestados</h2>
+      <div class="carrossel-wrapper">
+        <button class="btn-carrossel btn-left" onclick="scrollCarrossel('carrosselMais', -1)">&#10094;</button>
+        <div class="carrossel" id="carrosselMais">
+          <div class="livro"><img src="capa1.jpg" alt=""><p>Livro 1</p></div>
+          <div class="livro"><img src="capa2.jpg" alt=""><p>Livro 2</p></div>
+          <div class="livro"><img src="capa3.jpg" alt=""><p>Livro 3</p></div>
+          <div class="livro"><img src="capa4.jpg" alt=""><p>Livro 4</p></div>
+        </div>
+        <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselMais', 1)">&#10095;</button>
+      </div>
+    </section>
+
+    <!-- OUTROS GÊNEROS -->
     <section class="genero" id="aventura">
       <h2>Aventura</h2>
       <div class="carrossel-wrapper">
         <button class="btn-carrossel btn-left" onclick="scrollCarrossel('carrosselAventura', -1)">&#10094;</button>
         <div class="carrossel" id="carrosselAventura">
-          <div class="livro"><img src="capa1.jpg" alt=""><p>Livro 1</p></div>
-          <div class="livro"><img src="capa2.jpg" alt=""><p>Livro 2</p></div>
-          <div class="livro"><img src="capa3.jpg" alt=""><p>Livro 3</p></div>
+          <div class="livro"><img src="capa5.jpg" alt=""><p>Livro 5</p></div>
+          <div class="livro"><img src="capa6.jpg" alt=""><p>Livro 6</p></div>
         </div>
         <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselAventura', 1)">&#10095;</button>
       </div>
@@ -175,7 +201,7 @@
     function scrollCarrossel(id, direcao) {
       const carrossel = document.getElementById(id);
       if(!carrossel) return;
-      const largura = carrossel.clientWidth / 2; // rola metade do carrossel
+      const largura = carrossel.clientWidth / 2;
       carrossel.scrollBy({ left: direcao * largura, behavior: 'smooth' });
     }
   </script>
