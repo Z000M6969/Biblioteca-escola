@@ -4,127 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Biblioteca</title>
-  
-  <!-- Font Awesome para ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; background: #f9f9f9; color: #333; }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { font-family: Arial, sans-serif; background:#f9f9f9; color:#333; }
 
-    /* CABEÇALHO */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 20px;
-      background: #1e90ff;
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-    header img.logo { height: 50px; }
-    nav { display: flex; gap: 20px; }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-    }
-    nav a:hover { color: #ffd700; }
+    header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:#1e90ff; color:white; position:sticky; top:0; z-index:20; }
+    header img.logo { height:50px; }
+    nav { display:flex; gap:20px; }
+    nav a { color:white; font-size:20px; display:flex; justify-content:center; align-items:center; width:40px; height:40px; text-decoration:none; }
+    nav a:hover { color:#ffd700; }
 
-    /* BANNER */
-    .banner {
-      width: 100%;
-      height: 300px; 
-      background: url('colorful-book-magazine-library-shelf-600nw-2419079741.webp') center/cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 30px;
-      border-radius: 0;
-    }
-    .banner h1 {
-      color: white;
-      font-size: 36px;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-    }
+    .banner { width:100%; height:300px; background:url('colorful-book-magazine-library-shelf-600nw-2419079741.webp') center/cover no-repeat; display:flex; justify-content:center; align-items:center; margin-bottom:30px; }
+    .banner h1 { color:white; font-size:36px; text-shadow:2px 2px 6px rgba(0,0,0,0.5); }
 
-    main { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    main { padding:20px; display:flex; flex-direction:column; align-items:center; }
 
-    /* FILTRO POR GÊNERO */
-    .filtro {
-      margin-bottom: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .filtro select {
-      padding: 8px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
+    .filtro { margin-bottom:30px; display:flex; justify-content:center; align-items:center; }
+    .filtro select { padding:8px; font-size:14px; border-radius:6px; border:1px solid #ccc; }
 
-    /* SEÇÃO DE CARROSSEL */
-    .genero { margin-bottom: 60px; width: 100%; max-width: 1000px; }
-    .genero h2 { margin-bottom: 10px; color: #1e90ff; text-align: left; }
+    .genero { margin-bottom:60px; width:100%; max-width:1000px; }
+    .genero h2 { margin-bottom:10px; color:#1e90ff; text-align:left; }
 
-    .carrossel-wrapper { position: relative; width: 100%; }
-    .carrossel {
-      display: flex;
-      overflow-x: auto;
-      gap: 16px;
-      scroll-behavior: smooth;
-      padding: 10px 0;
-    }
-    .carrossel::-webkit-scrollbar { display: none; }
+    .carrossel-wrapper { position:relative; width:100%; }
+    .carrossel { display:flex; overflow-x:auto; gap:16px; scroll-behavior:smooth; padding:10px 0; }
+    .carrossel::-webkit-scrollbar { display:none; }
 
-    /* LIVROS */
-    .livro {
-      flex-shrink: 0;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      text-align: center;
-      padding: 10px;
-    }
-    .livro img { width: 120px; height: 180px; object-fit: cover; border-radius: 4px; margin-bottom: 8px; }
-    .livro p { font-weight: bold; font-size: 14px; }
+    .livro { flex-shrink:0; background:white; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; padding:10px; }
+    .livro img { width:120px; height:180px; object-fit:cover; border-radius:4px; margin-bottom:8px; }
+    .livro p { font-weight:bold; font-size:14px; }
 
-    /* PRIMEIRA SEÇÃO: MAIS EMPRESTADOS */
-    #mais-emprestados .livro img { width: 140px; height: 200px; }
-
-    /* BOTÕES LATERAIS */
-    .btn-carrossel {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(30,144,255,0.8);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 18px;
-      z-index: 10;
-    }
+    .btn-carrossel { position:absolute; top:50%; transform:translateY(-50%); background:rgba(30,144,255,0.8); color:white; border:none; padding:12px; border-radius:50%; cursor:pointer; font-size:18px; z-index:10; }
     .btn-carrossel:hover { background: rgba(16,78,139,0.9); }
-    .btn-left { left: -20px; }
-    .btn-right { right: -20px; }
-
+    .btn-left { left:-20px; }
+    .btn-right { right:-20px; }
   </style>
 </head>
 <body>
-
-  <!-- CABEÇALHO -->
   <header>
-    <img src="logo.png" alt="Logo da Escola" class="logo">
+    <img src="logo.png" alt="Logo" class="logo">
     <nav>
       <a href="#" title="Home"><i class="fas fa-home"></i></a>
       <a href="#" title="Pesquisar"><i class="fas fa-search"></i></a>
@@ -132,107 +50,88 @@
     </nav>
   </header>
 
-  <!-- BANNER -->
   <div class="banner">
     <h1>Bem-vindo(a) à Biblioteca!</h1>
   </div>
 
   <main>
-    <!-- FILTRO POR GÊNERO -->
     <div class="filtro">
       <label for="generoSelect" style="margin-right:10px;">Escolha o gênero:</label>
-      <select id="generoSelect">
-        <option value="todos">Todos</option>
-        <option value="aventura">Aventura</option>
-        <option value="biografia">Biografia</option>
-        <option value="classicos">Clássicos</option>
-        <option value="conto">Conto</option>
-        <option value="cronica">Crônica</option>
-        <option value="drama">Drama</option>
-        <option value="educacao">Educação</option>
-        <option value="fantasia">Fantasia</option>
-        <option value="ficcao">Ficção Científica</option>
-        <option value="filosofia">Filosofia</option>
-        <option value="historia">História</option>
-        <option value="humor">Humor</option>
-        <option value="infantil">Infantil</option>
-        <option value="misterio">Mistério</option>
-        <option value="policial">Policial</option>
-        <option value="poesia">Poesia</option>
-        <option value="romance">Romance</option>
-        <option value="terror">Terror</option>
-        <option value="autoajuda">Autoajuda</option>
-        <option value="religiao">Religião</option>
-        <option value="saude">Saúde</option>
-        <option value="tecnologia">Tecnologia</option>
-        <option value="economia">Economia</option>
-        <option value="artes">Artes</option>
-      </select>
+      <select id="generoSelect"></select>
     </div>
 
-    <!-- PRIMEIRO CARROSSEL: MAIS EMPRESTADOS (10 livros) -->
-    <section class="genero" id="mais-emprestados">
-      <h2>Mais emprestados</h2>
-      <div class="carrossel-wrapper">
-        <button class="btn-carrossel btn-left" onclick="scrollCarrossel('carrosselMais', -1)">&#10094;</button>
-        <div class="carrossel" id="carrosselMais">
-          <div class="livro"><img src="capa1.jpg" alt=""><p>Livro 1</p></div>
-          <div class="livro"><img src="capa2.jpg" alt=""><p>Livro 2</p></div>
-          <div class="livro"><img src="capa3.jpg" alt=""><p>Livro 3</p></div>
-          <div class="livro"><img src="capa4.jpg" alt=""><p>Livro 4</p></div>
-          <div class="livro"><img src="capa5.jpg" alt=""><p>Livro 5</p></div>
-          <div class="livro"><img src="capa6.jpg" alt=""><p>Livro 6</p></div>
-          <div class="livro"><img src="capa7.jpg" alt=""><p>Livro 7</p></div>
-          <div class="livro"><img src="capa8.jpg" alt=""><p>Livro 8</p></div>
-          <div class="livro"><img src="capa9.jpg" alt=""><p>Livro 9</p></div>
-          <div class="livro"><img src="capa10.jpg" alt=""><p>Livro 10</p></div>
-        </div>
-        <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselMais', 1)">&#10095;</button>
-      </div>
-    </section>
-
-    <!-- SEGUNDO CARROSSEL: CURRÍCULO ESCOLAR (10 livros) -->
-    <section class="genero" id="curriculo">
-      <h2>Currículo Escolar</h2>
-      <div class="carrossel-wrapper">
-        <button class="btn-carrossel btn-left" onclick="scrollCarrossel('carrosselCurriculo', -1)">&#10094;</button>
-        <div class="carrossel" id="carrosselCurriculo">
-          <div class="livro"><img src="capa11.jpg" alt=""><p>Livro 11</p></div>
-          <div class="livro"><img src="capa12.jpg" alt=""><p>Livro 12</p></div>
-          <div class="livro"><img src="capa13.jpg" alt=""><p>Livro 13</p></div>
-          <div class="livro"><img src="capa14.jpg" alt=""><p>Livro 14</p></div>
-          <div class="livro"><img src="capa15.jpg" alt=""><p>Livro 15</p></div>
-          <div class="livro"><img src="capa16.jpg" alt=""><p>Livro 16</p></div>
-          <div class="livro"><img src="capa17.jpg" alt=""><p>Livro 17</p></div>
-          <div class="livro"><img src="capa18.jpg" alt=""><p>Livro 18</p></div>
-          <div class="livro"><img src="capa19.jpg" alt=""><p>Livro 19</p></div>
-          <div class="livro"><img src="capa20.jpg" alt=""><p>Livro 20</p></div>
-        </div>
-        <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselCurriculo', 1)">&#10095;</button>
-      </div>
-    </section>
-
+    <div id="carrosseisContainer"></div>
   </main>
 
   <script>
-    const generoSelect = document.getElementById('generoSelect');
-    const generos = document.querySelectorAll('.genero');
+    const generos = ['Todos','Aventura','Biografia','Clássicos','Conto','Crônica','Drama','Educação','Fantasia','Ficção Científica',
+      'Filosofia','História','Humor','Infantil','Mistério','Policial','Poesia','Romance','Terror','Autoajuda','Religião','Saúde','Tecnologia','Economia','Artes'];
 
-    function mostrarGenero() {
-      // Ambos carrosséis sempre visíveis
-      generos.forEach(sec => sec.style.display = 'block');
+    const select = document.getElementById('generoSelect');
+    generos.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g; opt.textContent = g;
+      select.appendChild(opt);
+    });
+
+    const container = document.getElementById('carrosseisContainer');
+
+    // Função para renderizar carrossel de um gênero
+    function renderCarrossel(genero) {
+      container.innerHTML = ''; // Limpa container
+      if(genero === 'Todos'){
+        generos.forEach(g => createCarrossel(g));
+      } else {
+        createCarrossel(genero);
+      }
     }
 
-    generoSelect.addEventListener('change', mostrarGenero);
-    mostrarGenero();
+    function createCarrossel(g) {
+      const sec = document.createElement('section');
+      sec.className = 'genero';
+      const h2 = document.createElement('h2');
+      h2.textContent = g;
+      sec.appendChild(h2);
 
-    function scrollCarrossel(id, direcao) {
-      const carrossel = document.getElementById(id);
-      if(!carrossel) return;
-      const largura = carrossel.clientWidth / 2;
-      carrossel.scrollBy({ left: direcao * largura, behavior: 'smooth' });
+      const wrapper = document.createElement('div');
+      wrapper.className = 'carrossel-wrapper';
+
+      const carrossel = document.createElement('div');
+      carrossel.className = 'carrossel';
+
+      for(let j=1;j<=10;j++){
+        const livroDiv = document.createElement('div');
+        livroDiv.className = 'livro';
+        const img = document.createElement('img');
+        img.src = `capa${j}.jpg`; // ajuste suas imagens reais
+        img.alt = `${g} Livro ${j}`;
+        const p = document.createElement('p');
+        p.textContent = `${g} Livro ${j}`;
+        livroDiv.appendChild(img);
+        livroDiv.appendChild(p);
+        carrossel.appendChild(livroDiv);
+      }
+
+      const btnLeft = document.createElement('button');
+      btnLeft.className = 'btn-carrossel btn-left';
+      btnLeft.innerHTML = '&#10094;';
+      btnLeft.onclick = () => carrossel.scrollBy({ left: -carrossel.clientWidth/2, behavior:'smooth' });
+
+      const btnRight = document.createElement('button');
+      btnRight.className = 'btn-carrossel btn-right';
+      btnRight.innerHTML = '&#10095;';
+      btnRight.onclick = () => carrossel.scrollBy({ left: carrossel.clientWidth/2, behavior:'smooth' });
+
+      wrapper.appendChild(btnLeft);
+      wrapper.appendChild(carrossel);
+      wrapper.appendChild(btnRight);
+      sec.appendChild(wrapper);
+      container.appendChild(sec);
     }
+
+    select.addEventListener('change', ()=> renderCarrossel(select.value));
+
+    renderCarrossel('Todos'); // inicializa mostrando todos
   </script>
-
 </body>
 </html>
