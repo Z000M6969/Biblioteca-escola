@@ -17,68 +17,47 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(30, 144, 255, 0.2);
   width: 350px;
-  padding: 20px;
+  padding: 30px 25px;
+  text-align: center;
 }
 
-/* Abas */
-.tabs {
-  display: flex;
-  justify-content: space-around;
+/* Título */
+.container h2 {
   margin-bottom: 20px;
-}
-
-.tabs button {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  background: #f0f8ff;
   color: #1e90ff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-  border-radius: 8px 8px 0 0;
+  font-size: 22px;
 }
 
-.tabs button.active {
-  background: #1e90ff;
-  color: #fff;
-}
-
-/* Forms */
-.form {
-  display: none;
-}
-
-.form.active {
-  display: block;
-}
-
+/* Campos */
 .field {
   margin-bottom: 15px;
+  text-align: left;
 }
 
 .field input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #1e90ff;
   border-radius: 8px;
   outline: none;
+  font-size: 14px;
 }
 
 .field input:focus {
   border-color: #104e8b;
-  box-shadow: 0 0 6px rgba(30, 144, 255, 0.5);
+  box-shadow: 0 0 6px rgba(30, 144, 255, 0.4);
 }
 
 /* Botão */
 .btn {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: #1e90ff;
   color: #fff;
   border: none;
   border-radius: 8px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -87,10 +66,9 @@ body {
   background: #104e8b;
 }
 
-/* Mensagens */
+/* Mensagem */
 .msg {
-  margin-top: 10px;
+  margin-top: 12px;
   font-size: 14px;
   color: red;
-  text-align: center;
 }
