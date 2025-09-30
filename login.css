@@ -21,6 +21,14 @@ body {
   min-height: 100vh;
 }
 
+/* logo */
+.logo {
+  display: block;
+  margin: 0 auto 20px auto;
+  max-width: 120px;
+}
+
+
 /* container do login */
 .container {
   width: 360px;
@@ -40,6 +48,7 @@ body {
 /* campos */
 .field {
   width: 100%;
+  margin-bottom: 16px; /* espaço entre os campos */
 }
 
 .field input {
