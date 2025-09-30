@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Biblioteca</title>
   
-  <!-- Font Awesome CDN para ícones -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Font Awesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,14 +21,8 @@
       background: #1e90ff;
       color: white;
     }
-
     header img.logo { height: 50px; }
-
-    nav {
-      display: flex;
-      gap: 20px;
-    }
-
+    nav { display: flex; gap: 20px; }
     nav a {
       color: white;
       text-decoration: none;
@@ -41,26 +35,27 @@
     }
     nav a:hover { color: #ffd700; }
 
-    /* CONTEÚDO PRINCIPAL */
-    main {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* centraliza conteúdo */
-    }
-
-    h1 {
-      margin-bottom: 20px;
+    /* BANNER DO BEM-VINDO */
+    .banner {
+      width: 100%;
+      background: linear-gradient(90deg, #1e90ff, #104e8b);
+      color: white;
+      padding: 40px 20px;
       text-align: center;
-      font-size: 28px;
-      color: #1e90ff;
+      margin-bottom: 20px;
+      border-radius: 12px;
     }
+    .banner h1 { font-size: 32px; }
+
+    /* CONTEÚDO PRINCIPAL */
+    main { padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
     /* FILTRO POR GÊNERO */
     .filtro {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       display: flex;
       justify-content: center;
+      align-items: center;
     }
     .filtro select {
       padding: 8px;
@@ -70,16 +65,17 @@
     }
 
     /* SEÇÃO DE GÊNERO */
-    .genero { margin-bottom: 40px; display: none; width: 100%; max-width: 900px; }
+    .genero { margin-bottom: 60px; display: none; position: relative; width: 100%; max-width: 900px; }
     .genero h2 { margin-bottom: 10px; color: #1e90ff; text-align: left; }
 
     /* CARROSSEL */
+    .carrossel-wrapper { position: relative; }
     .carrossel {
       display: flex;
       overflow-x: auto;
       gap: 16px;
       scroll-behavior: smooth;
-      padding-bottom: 10px;
+      padding: 10px 0;
     }
     .carrossel::-webkit-scrollbar { display: none; }
     .livro {
@@ -93,17 +89,23 @@
     }
     .livro img { width: 100%; border-radius: 4px; margin-bottom: 8px; }
 
-    /* BOTÕES CARROSSEL */
+    /* BOTÕES LATERAIS */
     .btn-carrossel {
-      background: #1e90ff;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(30,144,255,0.8);
       color: white;
       border: none;
-      padding: 8px 12px;
-      margin: 5px;
-      border-radius: 4px;
+      padding: 12px;
+      border-radius: 50%;
       cursor: pointer;
+      font-size: 18px;
+      z-index: 10;
     }
-    .btn-carrossel:hover { background: #104e8b; }
+    .btn-carrossel:hover { background: rgba(16,78,139,0.9); }
+    .btn-left { left: -20px; }
+    .btn-right { right: -20px; }
 
   </style>
 </head>
@@ -119,10 +121,12 @@
     </nav>
   </header>
 
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main>
-    <h1>Bem-vindo(a)!</h1>
+  <!-- BANNER BEM-VINDO -->
+  <div class="banner">
+    <h1>Bem-vindo(a) à Biblioteca!</h1>
+  </div>
 
+  <main>
     <!-- FILTRO POR GÊNERO -->
     <div class="filtro">
       <label for="generoSelect" style="margin-right:10px;">Escolha o gênero:</label>
@@ -131,39 +135,22 @@
         <option value="aventura">Aventura</option>
         <option value="biografia">Biografia</option>
         <option value="classicos">Clássicos</option>
-        <option value="conto">Conto</option>
-        <option value="cronica">Crônica</option>
-        <option value="drama">Drama</option>
-        <option value="educacao">Educação</option>
-        <option value="fantasia">Fantasia</option>
-        <option value="ficcao">Ficção Científica</option>
-        <option value="filosofia">Filosofia</option>
-        <option value="historia">História</option>
-        <option value="humor">Humor</option>
-        <option value="infantil">Infantil</option>
-        <option value="misterio">Mistério</option>
-        <option value="policial">Policial</option>
-        <option value="poesia">Poesia</option>
-        <option value="romance">Romance</option>
-        <option value="terror">Terror</option>
-        <option value="autoajuda">Autoajuda</option>
-        <option value="religiao">Religião</option>
-        <option value="saude">Saúde</option>
-        <option value="tecnologia">Tecnologia</option>
-        <option value="economia">Economia</option>
-        <option value="artes">Artes</option>
+        <!-- Adicione os outros gêneros -->
       </select>
     </div>
 
-    <!-- SEÇÃO DE GÊNERO EXEMPLO -->
+    <!-- EXEMPLO DE CARROSSEL -->
     <section class="genero" id="aventura">
       <h2>Aventura</h2>
-      <div class="carrossel">
-        <div class="livro"><img src="capa1.jpg" alt=""><p>Livro 1</p></div>
-        <div class="livro"><img src="capa2.jpg" alt=""><p>Livro 2</p></div>
+      <div class="carrossel-wrapper">
+        <button class="btn-carrossel btn-left" onclick="scrollCarrossel('carrosselAventura', -1)">&#10094;</button>
+        <div class="carrossel" id="carrosselAventura">
+          <div class="livro"><img src="capa1.jpg" alt=""><p>Livro 1</p></div>
+          <div class="livro"><img src="capa2.jpg" alt=""><p>Livro 2</p></div>
+          <div class="livro"><img src="capa3.jpg" alt=""><p>Livro 3</p></div>
+        </div>
+        <button class="btn-carrossel btn-right" onclick="scrollCarrossel('carrosselAventura', 1)">&#10095;</button>
       </div>
-      <button class="btn-carrossel" onclick="scrollCarrossel('carrosselAventura', -1)">◀</button>
-      <button class="btn-carrossel" onclick="scrollCarrossel('carrosselAventura', 1)">▶</button>
     </section>
 
   </main>
@@ -182,14 +169,13 @@
         }
       });
     }
-
     generoSelect.addEventListener('change', mostrarGenero);
     mostrarGenero();
 
     function scrollCarrossel(id, direcao) {
       const carrossel = document.getElementById(id);
       if(!carrossel) return;
-      const largura = carrossel.clientWidth;
+      const largura = carrossel.clientWidth / 2; // rola metade do carrossel
       carrossel.scrollBy({ left: direcao * largura, behavior: 'smooth' });
     }
   </script>
