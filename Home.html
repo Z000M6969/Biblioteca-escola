@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Biblioteca</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f9f9f9; color: #333; }
+
+    /* CABEÇALHO */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: #1e90ff;
+      color: white;
+    }
+
+    header img.logo { height: 50px; }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    nav a:hover { text-decoration: underline; }
+
+    /* CONTEÚDO PRINCIPAL */
+    main { padding: 20px; }
+    h1 { margin-bottom: 20px; }
+
+    /* FILTRO GÊNERO */
+    .filtro {
+      margin-bottom: 20px;
+    }
+    .filtro select {
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    /* SEÇÃO DE GÊNERO */
+    .genero { margin-bottom: 40px; display: none; }
+    .genero h2 { margin-bottom: 10px; color: #1e90ff; }
+
+    /* CARROSSEL */
+    .carrossel {
+      display: flex;
+      overflow-x: auto;
+      gap: 16px;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+    }
+    .carrossel::-webkit-scrollbar { display: none; }
+    .livro {
+      min-width: 120px;
+      flex-shrink: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 10px;
+    }
+    .livro img { width: 100%; border-radius: 4px; margin-bottom: 8px; }
+
+    /* BOTÕES CARROSSEL */
+    .btn-carrossel {
+      background: #1e90ff;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-carrossel:hover { background: #104e8b; }
+
+  </style>
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <header>
+    <img src="logo.png" alt="Logo da Escola" class="logo">
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Pesquisar</a>
+      <a href="#">Usuário</a>
+    </nav>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main>
+    <h1>Bem-vindo(a)!</h1>
+
+    <!-- FILTRO POR GÊNERO -->
+    <div class="filtro">
+      <label for="generoSelect">Escolha o gênero:</label>
+      <select id="generoSelect">
+        <option value="todos">Todos</option>
+        <option value="aventura">Aventura</option>
+        <option value="biografia">Biografia</option>
+        <option value="classicos">Clássicos</option>
+        <option value="conto">Conto</option>
+        <option value="cronica">Crônica</option>
+        <option value="drama">Drama</option>
+        <option value="educacao">Educação</option>
+        <option value="fantasia">Fantasia</option>
+        <option value="ficcao">Ficção Científica</option>
+        <option value="filosofia">Filosofia</option>
+        <option value="historia">História</option>
+        <option value="humor">Humor</option>
+        <option value="infantil">Infantil</option>
+        <option value="misterio">Mistério</option>
+        <option value="policial">Policial</option>
+        <option value="poesia">Poesia</option>
+        <option value="romance">Romance</option>
+        <option value="terror">Terror</option>
+        <option value="autoajuda">Autoajuda</option>
+        <option value="religiao">Religião</option>
+        <option value="saude">Saúde</option>
+        <option value="tecnologia">Tecnologia</option>
+        <option value="economia">Economia</option>
+        <option value="artes">Artes</option>
+      </select>
+    </div>
+
+    <!-- SEÇÕES DE GÊNERO -->
+    <section class="genero" id="aventura">
+      <h2>Aventura</h2>
+      <div class="carrossel">
+        <div class="livro"><img src="capa1.jpg" alt=""><p>Livro 1</p></div>
+        <div class="livro"><img src="capa2.jpg" alt=""><p>Livro 2</p></div>
+      </div>
+    </section>
+
+    <section class="genero" id="biografia">
+      <h2>Biografia</h2>
+      <div class="carrossel">
+        <div class="livro"><img src="capa3.jpg" alt=""><p>Livro 3</p></div>
+        <div class="livro"><img src="capa4.jpg" alt=""><p>Livro 4</p></div>
+      </div>
+    </section>
+
+    <!-- Adicione as outras seções dos gêneros aqui -->
+
+  </main>
+
+  <script>
+    const generoSelect = document.getElementById('generoSelect');
+    const generos = document.querySelectorAll('.genero');
+
+    function mostrarGenero() {
+      const valor = generoSelect.value;
+      generos.forEach(sec => {
+        if(valor === 'todos' || sec.id === valor){
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    generoSelect.addEventListener('change', mostrarGenero);
+    mostrarGenero(); // exibir todos ao carregar
+  </script>
+
+</body>
+</html>
+
