@@ -3,129 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login Szymanski</title>
+<title>Home Szymanski</title>
 <style>
-/* Reset e box-sizing */
-*, *::before, *::after { box-sizing: border-box; }
-html, body { height:100%; margin:0; padding:0; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial; background:#ffffff; }
-
-/* centro perfeito */
-body { display:flex; justify-content:center; align-items:center; min-height:100vh; }
-
-/* container */
-.container {
-  width: 360px;
-  max-width: calc(100% - 40px);
-  padding: 32px 28px;
-  background: #ffffff;
-  border: 2px solid #1e90ff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(30,144,255,0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: stretch;
-}
-
-/* logo */
-.logo { display:block; margin:0 auto 20px auto; max-width:120px; }
-
-/* título */
-.container h2 { margin:0; font-size:20px; text-align:center; color:#1e90ff; }
-
-/* campos */
-.field { width:100%; margin-bottom:16px; }
-.field input {
-  width:100%;
-  padding:12px;
-  font-size:14px;
-  border:1px solid rgba(30,144,255,0.4);
-  border-radius:8px;
-  outline:none;
-  background:#fff;
-}
-
-/* botão */
-.btn {
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#1e90ff;
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-  font-size:15px;
-}
+body { font-family: Arial, sans-serif; margin:0; padding:20px; background:#f5f5f5; }
+.container { max-width:600px; margin:0 auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+h1 { color:#1e90ff; }
+.btn { padding:10px 16px; border:none; border-radius:8px; background:#1e90ff; color:#fff; cursor:pointer; }
 .btn:hover { background:#104e8b; }
-
-/* mensagem */
-.msg { text-align:center; font-size:14px; color:#d9534f; }
-.msg.success { color:#28a745; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>Login</h2>
-  <img src="download.png" alt="Logo da Escola" class="logo">
-
-  <form id="loginForm" class="form active">
-    <div class="field">
-      <input type="text" id="loginCGM" placeholder="CGM" required>
-    </div>
-    <div class="field">
-      <input type="email" id="loginEmail" placeholder="Email" required>
-    </div>
-    <div class="field">
-      <input type="password" id="loginPass" placeholder="Senha" required>
-    </div>
-    <button type="submit" class="btn">Entrar</button>
-    <div id="loginMsg" class="msg"></div>
-  </form>
+  <h1>Bem-vindo, <span id="userName">Usuário</span>!</h1>
+  <p>Seu email: <span id="userEmail">email@dominio.com</span></p>
+  <p>Seu CGM: <span id="userCGM">0000</span></p>
+  <button id="logoutBtn" class="btn">Sair</button>
 </div>
 
-<!-- Supabase CDN e login JS -->
 <script type="module">
   import { supabase } from "./supabaseClient.js";
 
-  const loginForm = document.getElementById("loginForm");
-  const loginMsg = document.getElementById("loginMsg");
+  // Pegar usuário do localStorage
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
 
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  if (!usuario) {
+    // Se não estiver logado, redireciona para login
+    window.location.href = "index.html";
+  } else {
+    // Preencher os dados na página
+    document.getElementById("userName").textContent = usuario.nome || "Usuário";
+    document.getElementById("userEmail").textContent = usuario.email;
+    document.getElementById("userCGM").textContent = usuario.cgm;
+  }
 
-    const cgm = document.getElementById("loginCGM").value.trim();
-    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-    const senha = document.getElementById("loginPass").value;
-
-    try {
-      // BUSCAR USUÁRIO PELO CGM E EMAIL na tabela "usuarios"
-      const { data: usuario, error } = await supabase
-        .from("usuarios")
-        .select("*")
-        .eq("cgm", cgm)
-        .eq("email", email)
-        .maybeSingle();
-
-      if (error) throw error;
-      if (!usuario) throw new Error("Usuário não encontrado!");
-      if (usuario.senha !== senha) throw new Error("Senha incorreta!");
-
-      // LOGIN OK
-      loginMsg.classList.add("success");
-      loginMsg.textContent = "Login efetuado com sucesso!";
-
-      // salvar dados do usuário localmente (opcional)
-      localStorage.setItem("usuario", JSON.stringify(usuario));
-
-      // redirecionar
-      setTimeout(() => window.location.href="home.html", 1000);
-
-    } catch (err) {
-      loginMsg.classList.remove("success");
-      loginMsg.textContent = "Erro: " + err.message;
-    }
+  // LOGOUT
+  const logoutBtn = document.getElementById("logoutBtn");
+  logoutBtn.addEventListener("click", async () => {
+    // Remover do localStorage
+    localStorage.removeItem("usuario");
+    // Redirecionar para login
+    window.location.href = "index.html";
   });
 </script>
 
