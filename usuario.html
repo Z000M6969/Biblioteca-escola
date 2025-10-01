@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROCKBAND - Usuário</title>
+  <link rel="stylesheet" href="usuário.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Seta para voltar -->
+  <a href="home.html" class="back-btn">&#8592; Voltar</a>
+
+  <!-- Container do usuário -->
+  <div class="user-container">
+    <!-- Logo da escola -->
+    <div class="school-logo">
+      <img src="logo-escola.png" alt="Logo Escola" class="school-logo-img">
+    </div>
+
+    <!-- Logo do Rock Band -->
+    <div class="logo">
+      <img src="Rock Band logo Nova.png" alt="Logo Rock Band">
+    </div>
+
+    <!-- Foto do gatinho -->
+    <img src="637b72e50fde8ae712fc9fd60efdeebc.jpg" alt="Gatinho do Rock" class="user-photo">
+
+    <!-- Informações do usuário -->
+    <div class="user-profile">
+      <h2 id="userName">João Silva</h2> <!-- Nome do usuário -->
+      <p id="userEmail">joao.silva@email.com</p> <!-- E-mail do usuário -->
+      <p id="userCGM">CGM: 123456789</p> <!-- CGM do usuário -->
+      <p class="user-password">Senha cadastrada ✅</p> <!-- Status da senha -->
+    </div>
+
+    <!-- Livro Emprestado e Data de Devolução -->
+    <div class="book-info">
+      <h3>Livro Emprestado:</h3>
+      <p id="bookTitle">O Senhor dos Anéis</p> <!-- Nome do livro -->
+      <p id="dueDate">Data de devolução: 08/10/2025</p> <!-- Data de devolução -->
+    </div>
+
+    <!-- Logout -->
+    <button id="logoutBtn" class="logout-btn">Sair</button>
+  </div>
+
+  <!-- Supabase JS -->
+  <script type="module" src="usuário.js"></script>
+</body>
+</html>
