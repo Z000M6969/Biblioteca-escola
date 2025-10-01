@@ -10,9 +10,8 @@
 html, body { height:100%; margin:0; padding:0; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial; background:#ffffff; }
 
 /* centro perfeito */
-body { display:flex; justify-content:center; align-items:center; }
+body { display:flex; justify-content:center; align-items:center; min-height:100vh; }
 
-  
 /* container */
 .container {
   width: 360px;
@@ -62,6 +61,7 @@ body { display:flex; justify-content:center; align-items:center; }
 
 /* mensagem */
 .msg { text-align:center; font-size:14px; color:#d9534f; }
+.msg.success { color:#28a745; }
 </style>
 </head>
 <body>
@@ -85,13 +85,9 @@ body { display:flex; justify-content:center; align-items:center; }
   </form>
 </div>
 
-<!-- Supabase CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<!-- Supabase CDN e login JS -->
 <script type="module">
-  // CONFIGURAÇÃO DO SUPABASE
-  const supabaseUrl = "https://uhohygfsqwpmymjhzirs.supabase.co";
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVob2h5Z2ZzcXdwbXltamh6aXJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzNDQxMDcsImV4cCI6MjA3NDkyMDEwN30.INAsqm24p5IviQzkm9ymyh1Arn0H0TPsBEowVWkJmG4";
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+  import { supabase } from "./supabaseClient.js";
 
   const loginForm = document.getElementById("loginForm");
   const loginMsg = document.getElementById("loginMsg");
@@ -100,42 +96,36 @@ body { display:flex; justify-content:center; align-items:center; }
     e.preventDefault();
 
     const cgm = document.getElementById("loginCGM").value.trim();
-    const email = document.getElementById("loginEmail").value.trim();
+    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
     const senha = document.getElementById("loginPass").value;
 
-    // BUSCAR USUÁRIO PELO CGM E EMAIL
-    const { data: usuario, error } = await supabase
-      .from("usuarios")
-      .select("*")
-      .eq("cgm", cgm)
-      .eq("email", email)
-      .maybeSingle();
+    try {
+      // BUSCAR USUÁRIO PELO CGM E EMAIL na tabela "usuarios"
+      const { data: usuario, error } = await supabase
+        .from("usuarios")
+        .select("*")
+        .eq("cgm", cgm)
+        .eq("email", email)
+        .maybeSingle();
 
-    if(error) {
-      loginMsg.textContent = "Erro ao buscar usuário: " + error.message;
-      return;
+      if (error) throw error;
+      if (!usuario) throw new Error("Usuário não encontrado!");
+      if (usuario.senha !== senha) throw new Error("Senha incorreta!");
+
+      // LOGIN OK
+      loginMsg.classList.add("success");
+      loginMsg.textContent = "Login efetuado com sucesso!";
+
+      // salvar dados do usuário localmente (opcional)
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+
+      // redirecionar
+      setTimeout(() => window.location.href="home.html", 1000);
+
+    } catch (err) {
+      loginMsg.classList.remove("success");
+      loginMsg.textContent = "Erro: " + err.message;
     }
-
-    if(!usuario) {
-      loginMsg.textContent = "Usuário não encontrado!";
-      return;
-    }
-
-    // VERIFICAR SENHA (atenção: texto puro)
-    if(usuario.senha !== senha) {
-      loginMsg.textContent = "Senha incorreta!";
-      return;
-    }
-
-    // LOGIN OK
-    loginMsg.style.color = "#28a745";
-    loginMsg.textContent = "Login efetuado com sucesso!";
-
-    // salvar dados do usuário localmente (opcional)
-    localStorage.setItem("usuario", JSON.stringify(usuario));
-
-    // redirecionar
-    setTimeout(() => window.location.href="home.html", 1000);
   });
 </script>
 
