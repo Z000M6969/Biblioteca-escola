@@ -8,58 +8,14 @@
 /* Reset e box-sizing */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { height:100%; margin:0; padding:0; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial; background:#ffffff; }
-
-/* centro perfeito */
 body { display:flex; justify-content:center; align-items:center; min-height:100vh; }
-
-/* container */
-.container {
-  width: 360px;
-  max-width: calc(100% - 40px);
-  padding: 32px 28px;
-  background: #ffffff;
-  border: 2px solid #1e90ff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(30,144,255,0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: stretch;
-}
-
-/* logo */
+.container { width: 360px; max-width: calc(100% - 40px); padding: 32px 28px; background: #ffffff; border: 2px solid #1e90ff; border-radius: 12px; box-shadow: 0 6px 18px rgba(30,144,255,0.12); display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
 .logo { display:block; margin:0 auto 20px auto; max-width:120px; }
-
-/* título */
 .container h2 { margin:0; font-size:20px; text-align:center; color:#1e90ff; }
-
-/* campos */
 .field { width:100%; margin-bottom:16px; }
-.field input {
-  width:100%;
-  padding:12px;
-  font-size:14px;
-  border:1px solid rgba(30,144,255,0.4);
-  border-radius:8px;
-  outline:none;
-  background:#fff;
-}
-
-/* botão */
-.btn {
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#1e90ff;
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-  font-size:15px;
-}
+.field input { width:100%; padding:12px; font-size:14px; border:1px solid rgba(30,144,255,0.4); border-radius:8px; outline:none; background:#fff; }
+.btn { width:100%; padding:12px; border:none; border-radius:8px; background:#1e90ff; color:#fff; font-weight:700; cursor:pointer; font-size:15px; }
 .btn:hover { background:#104e8b; }
-
-/* mensagem */
 .msg { text-align:center; font-size:14px; color:#d9534f; }
 .msg.success { color:#28a745; }
 </style>
@@ -85,7 +41,6 @@ body { display:flex; justify-content:center; align-items:center; min-height:100v
   </form>
 </div>
 
-<!-- Supabase CDN e login JS -->
 <script type="module">
 import { supabase } from "./supabaseClient.js";
 
@@ -97,30 +52,34 @@ loginForm.addEventListener("submit", async (e) => {
 
   const cgm = document.getElementById("loginCGM").value.trim();
   const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-  const senha = document.getElementById("loginPass").value;
+  const password = document.getElementById("loginPass").value;
 
   try {
-    // BUSCAR USUÁRIO PELO CGM E EMAIL na tabela "usuarios"
-    const { data: usuario, error } = await supabase
+    // 1️⃣ Autenticação pelo Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    if (authError) throw authError;
+    if (!authData.session) throw new Error("Credenciais inválidas.");
+
+    // 2️⃣ Verificar CGM na tabela 'usuarios'
+    const { data: usuario, error: userError } = await supabase
       .from("usuarios")
       .select("*")
-      .eq("cgm", cgm)
-      .eq("email", email)
+      .eq("id", authData.user.id) // assume que a tabela 'usuarios' tem o id do auth user
       .maybeSingle();
 
-    if (error) throw error;
-    if (!usuario) throw new Error("Usuário não encontrado!");
-    if (usuario.senha !== senha) throw new Error("Senha incorreta!");
+    if (userError) throw userError;
+    if (!usuario) throw new Error("Usuário não encontrado na tabela 'usuarios'.");
+    if (usuario.cgm !== cgm) throw new Error("CGM incorreto!");
 
     // LOGIN OK
     loginMsg.classList.add("success");
     loginMsg.textContent = "Login efetuado com sucesso!";
 
-    // salvar dados do usuário localmente (opcional)
+    // salvar dados do usuário localmente
     localStorage.setItem("usuario", JSON.stringify(usuario));
 
-    // redirecionar imediatamente
-    window.location.href = "Home.html";
+    // redirecionar para Home
+    window.location.href = "home.html";
 
   } catch (err) {
     loginMsg.classList.remove("success");
