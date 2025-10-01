@@ -3,44 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ROCKBAND - Usuário</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-</head>
-<body>
-  <!-- Seta para voltar -->
-  <a href="home.html" class="back-btn">&#8592; Voltar</a>
-
-  <!-- Container do usuário -->
-  <div class="user-container">
-    <!-- Logo -->
-    <div class="logo">
-      <img src="Rock Band logo Nova.png" alt="Logo Rock Band">
-    </div>
-
-  <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ROCKBAND - Usuário</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <title>Biblioteca Szymanski - Usuário</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* Estilo geral */
+    /* Estilos Gerais */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f4f7;
+      font-family: 'Roboto', sans-serif;
+      background: #f4f7fb;
       color: #333;
-      padding: 0 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      padding: 20px;
       flex-direction: column;
     }
 
@@ -48,49 +29,60 @@
       text-decoration: none;
       color: #1e90ff;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 18px;
       margin-bottom: 20px;
+      transition: color 0.3s ease;
     }
 
-    /* Logo */
-    .logo img {
-      width: 150px;
-      margin-bottom: 20px;
+    a:hover {
+      color: #0056b3;
     }
 
-    /* Container do usuário */
+    /* Container Principal */
     .user-container {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      width: 300px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 100%;
+      max-width: 350px;
       text-align: center;
     }
 
-    /* Foto do usuário */
-    .user-photo {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
+    .logo img {
+      width: 180px;
+      margin-bottom: 20px;
     }
 
-    /* Informações do usuário */
+    /* Foto do Usuário */
+    .user-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+
+    /* Informações do Usuário */
     .user-profile h2 {
       font-size: 22px;
       color: #1e90ff;
+      margin-bottom: 10px;
     }
 
     .user-profile p {
       font-size: 16px;
+      color: #666;
       margin-top: 5px;
     }
 
-    /* Livro Emprestado */
+    .user-profile p strong {
+      font-weight: bold;
+    }
+
+    /* Informações do Livro Emprestado */
     .book-info {
-      margin-top: 20px;
+      margin-top: 30px;
       text-align: left;
     }
 
@@ -102,25 +94,27 @@
     .book-info p {
       font-size: 14px;
       color: #555;
+      margin-top: 5px;
     }
 
     /* Botão Logout */
     .logout-btn {
-      background: #ff4d4d;
-      color: #fff;
+      background: #e63946;
+      color: white;
       border: none;
-      padding: 10px;
-      border-radius: 5px;
-      margin-top: 20px;
+      padding: 12px 25px;
+      border-radius: 6px;
+      margin-top: 30px;
       cursor: pointer;
       font-size: 16px;
+      transition: background 0.3s ease;
     }
 
     .logout-btn:hover {
-      background: #ff3333;
+      background: #d82b35;
     }
 
-    /* Estilo para tela responsiva */
+    /* Estilo Responsivo */
     @media (max-width: 600px) {
       .user-container {
         width: 90%;
@@ -129,20 +123,20 @@
   </style>
 </head>
 <body>
-  <!-- Seta para voltar -->
+  <!-- Voltar para a Home -->
   <a href="home.html" class="back-btn">&#8592; Voltar</a>
 
-  <!-- Container do usuário -->
+  <!-- Container do Usuário -->
   <div class="user-container">
-    <!-- Logo -->
+    <!-- Logo da Biblioteca -->
     <div class="logo">
-      <img src="Rock Band logo Nova.png" alt="Logo Rock Band">
+      <img src="logo-szymanski.png" alt="Biblioteca Szymanski">
     </div>
 
-    <!-- Foto do usuário -->
+    <!-- Foto do Usuário -->
     <img src="gatinho-rock.png" alt="Gatinho do Rock" id="userPhoto" class="user-photo">
 
-    <!-- Informações do usuário -->
+    <!-- Informações do Usuário -->
     <div class="user-profile">
       <h2 id="userName">Carregando...</h2>
       <p id="userEmail">Carregando...</p>
@@ -156,10 +150,11 @@
       <p id="dueDate">Data de devolução: Carregando...</p>
     </div>
 
-    <!-- Logout -->
+    <!-- Botão Logout -->
     <button id="logoutBtn" class="logout-btn">Sair</button>
   </div>
 
+  <!-- Supabase JS -->
   <script type="module">
     import { supabase } from "./supabaseClient.js";
 
@@ -274,4 +269,7 @@
       }
     }
 
-    window
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
