@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pesquisa - Biblioteca</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { font-family: Arial, sans-serif; background:#f9f9f9; color:#333; }
+
+    header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:#1e90ff; color:white; }
+    header img.logo { height:50px; }
+    nav { display:flex; gap:20px; }
+    nav a { color:white; font-size:20px; display:flex; justify-content:center; align-items:center; width:40px; height:40px; text-decoration:none; }
+    nav a:hover { color:#ffd700; }
+
+    main { padding: 20px; max-width: 800px; margin: auto; }
+    h2 { text-align: center; color: #1e90ff; margin-bottom: 20px; }
+    input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .resultados { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px; }
+    .livro { background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-align: center; padding: 10px; width: 150px; }
+    .livro img { width: 120px; height: 180px; object-fit: cover; margin-bottom: 10px; border-radius: 4px; }
+    .livro p { font-weight: bold; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="download.png" alt="Logo" class="logo">
+    <nav>
+      <a href="index.html" title="Home"><i class="fas fa-home"></i></a>
+      <a href="pesquisa.html" title="Pesquisar"><i class="fas fa-search"></i></a>
+      <a href="usuario.html" title="Usuário"><i class="fas fa-user"></i></a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Pesquisa de Livros</h2>
+    <input type="text" id="pesquisaInput" placeholder="Digite o título ou autor" oninput="buscarLivros()">
+    <div id="resultadosContainer" class="resultados"></div>
+  </main>
+
+  <script>
+    const livros = [
+      { titulo: "O Senhor dos Anéis", autor: "J.R.R. Tolkien", imagem: "livro1.jpg" },
+      { titulo: "Dom Casmurro", autor: "Machado de Assis", imagem: "livro2.jpg" },
+      { titulo: "1984", autor: "George Orwell", imagem: "livro3.jpg" },
+      { titulo: "A Moreninha", autor: "Joaquim Manuel de Macedo", imagem: "livro4.jpg" }
+      // Adicione mais livros aqui
+    ];
+
+    function buscarLivros() {
+      const input = document.getElementById('pesquisaInput').value.toLowerCase();
+      const container = document.getElementById('resultadosContainer');
+      container.innerHTML = ''; // Limpa os resultados anteriores
+
+      const resultados = livros.filter(livro =>
+        livro.titulo.toLowerCase().includes(input) || livro.autor.toLowerCase().includes(input)
+      );
+
+      resultados.forEach(livro => {
+        const div = document.createElement('div');
+        div.className = 'livro';
+        div.innerHTML = `
+          <img src="${livro.imagem}" alt="${livro.titulo}">
+          <p>${livro.titulo}</p>
+          <p>${livro.autor}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
