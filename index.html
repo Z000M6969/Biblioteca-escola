@@ -1,36 +1,142 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Szymanski</title>
-  <link rel="stylesheet" href="login.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Szymanski</title>
+<style>
+/* Reset e box-sizing */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height:100%; margin:0; padding:0; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial; background:#ffffff; }
+
+/* centro perfeito */
+body { display:flex; justify-content:center; align-items:center; }
+
+/* container */
+.container {
+  width: 360px;
+  max-width: calc(100% - 40px);
+  padding: 32px 28px;
+  background: #ffffff;
+  border: 2px solid #1e90ff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(30,144,255,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* logo */
+.logo { display:block; margin:0 auto 20px auto; max-width:120px; }
+
+/* título */
+.container h2 { margin:0; font-size:20px; text-align:center; color:#1e90ff; }
+
+/* campos */
+.field { width:100%; margin-bottom:16px; }
+.field input {
+  width:100%;
+  padding:12px;
+  font-size:14px;
+  border:1px solid rgba(30,144,255,0.4);
+  border-radius:8px;
+  outline:none;
+  background:#fff;
+}
+
+/* botão */
+.btn {
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#1e90ff;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+  font-size:15px;
+}
+.btn:hover { background:#104e8b; }
+
+/* mensagem */
+.msg { text-align:center; font-size:14px; color:#d9534f; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>Login</h2>
 
-    <!-- Logo da escola -->
-    <img src="download.png" alt="Logo da Escola" class="logo">
+<div class="container">
+  <h2>Login</h2>
+  <img src="download.png" alt="Logo da Escola" class="logo">
 
-    <form id="loginForm" class="form active">
-      <div class="field">
-        <input type="text" id="loginCGM" placeholder="CGM" required>
-      </div>
-      <div class="field">
-        <input type="email" id="loginEmail" placeholder="Email" required>
-      </div>
-      <div class="field">
-        <input type="password" id="loginPass" placeholder="Senha" required>
-      </div>
+  <form id="loginForm" class="form active">
+    <div class="field">
+      <input type="text" id="loginCGM" placeholder="CGM" required>
+    </div>
+    <div class="field">
+      <input type="email" id="loginEmail" placeholder="Email" required>
+    </div>
+    <div class="field">
+      <input type="password" id="loginPass" placeholder="Senha" required>
+    </div>
+    <button type="submit" class="btn">Entrar</button>
+    <div id="loginMsg" class="msg"></div>
+  </form>
+</div>
 
-      <button type="submit" class="btn">Entrar</button>
-      <div id="loginMsg" class="msg"></div>
-    </form>
-  </div>
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script type="module">
+  // CONFIGURAÇÃO DO SUPABASE
+  const supabaseUrl = "https://SEU-PROJETO.supabase.co";
+  const supabaseKey = "SUA-KEY-ANON";
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-  <script type="module" src="auth.js"></script>
+  const loginForm = document.getElementById("loginForm");
+  const loginMsg = document.getElementById("loginMsg");
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const cgm = document.getElementById("loginCGM").value.trim();
+    const email = document.getElementById("loginEmail").value.trim();
+    const senha = document.getElementById("loginPass").value;
+
+    // BUSCAR USUÁRIO PELO CGM E EMAIL
+    const { data: usuario, error } = await supabase
+      .from("usuarios")
+      .select("*")
+      .eq("cgm", cgm)
+      .eq("email", email)
+      .maybeSingle();
+
+    if(error) {
+      loginMsg.textContent = "Erro ao buscar usuário: " + error.message;
+      return;
+    }
+
+    if(!usuario) {
+      loginMsg.textContent = "Usuário não encontrado!";
+      return;
+    }
+
+    // VERIFICAR SENHA (atenção: texto puro)
+    if(usuario.senha !== senha) {
+      loginMsg.textContent = "Senha incorreta!";
+      return;
+    }
+
+    // LOGIN OK
+    loginMsg.style.color = "#28a745";
+    loginMsg.textContent = "Login efetuado com sucesso!";
+
+    // salvar dados do usuário localmente (opcional)
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+
+    // redirecionar
+    setTimeout(() => window.location.href="home.html", 1000);
+  });
+</script>
+
 </body>
 </html>
