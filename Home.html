@@ -30,7 +30,7 @@
     .carrossel { display:flex; overflow-x:auto; gap:16px; scroll-behavior:smooth; padding:10px 0; }
     .carrossel::-webkit-scrollbar { display:none; }
 
-    .livro { flex-shrink:0; background:white; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; padding:10px; }
+    .livro { flex-shrink:0; background:white; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; padding:10px; cursor: pointer; }
     
     /* Imagens padronizadas com altura maior que largura */
     .livro img {
@@ -47,6 +47,54 @@
     .btn-carrossel:hover { background: rgba(16,78,139,0.9); }
     .btn-left { left:-20px; }
     .btn-right { right:-20px; }
+
+    /* Modal (janela pop-up) */
+    .modal {
+      display: none; /* Inicialmente escondido */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      text-align: center;
+    }
+
+    .modal .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .modal .close:hover {
+      color: black;
+    }
+
+    .btnEmprestar {
+      padding: 8px 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btnEmprestar:hover {
+      background-color: #218838;
+    }
   </style>
 </head>
 <body>
@@ -72,6 +120,18 @@
     <div id="carrosseisContainer"></div>
   </main>
 
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3 id="livroTitulo"></h3>
+      <p id="sinopse"></p>
+      <p><strong>Emprestar:</strong> <button id="btnEmprestar">Emprestar</button></p>
+      <p><strong>Data de Devolução:</strong> <span id="dataDevolucao"></span></p>
+      <p><strong>Estoque:</strong> <span id="estoque"></span></p>
+    </div>
+  </div>
+
   <script>
     const generos = ['Todos','Aventura','Biografia','Clássicos','Conto','Crônica','Drama','Educação','Fantasia','Ficção Científica',
       'Filosofia','História','Humor','Infantil','Mistério','Policial','Poesia','Romance','Terror','Autoajuda','Religião','Saúde','Tecnologia','Economia','Artes'];
@@ -84,6 +144,13 @@
     });
 
     const container = document.getElementById('carrosseisContainer');
+    const modal = document.getElementById('modal');
+    const closeModal = document.querySelector('.close');
+    const livroTitulo = document.getElementById('livroTitulo');
+    const sinopse = document.getElementById('sinopse');
+    const dataDevolucao = document.getElementById('dataDevolucao');
+    const estoque = document.getElementById('estoque');
+    const btnEmprestar = document.getElementById('btnEmprestar');
 
     function renderCarrossel(genero) {
       container.innerHTML = ''; // Limpa container
@@ -117,6 +184,9 @@
         p.textContent = `${g} Livro ${j}`;
         livroDiv.appendChild(img);
         livroDiv.appendChild(p);
+
+        livroDiv.onclick = () => mostrarDetalhes(g, j);
+
         carrossel.appendChild(livroDiv);
       }
 
@@ -137,7 +207,29 @@
       container.appendChild(sec);
     }
 
-    select.addEventListener('change', ()=> renderCarrossel(select.value));
+    function mostrarDetalhes(genero, livroId) {
+      // Simulando a sinopse e as informações do livro
+      livroTitulo.textContent = `${genero} Livro ${livroId}`;
+      sinopse.textContent = `Sinopse do Livro ${livroId}: Este é um livro fictício do gênero ${genero}.`;
+      estoque.textContent = `${Math.floor(Math.random() * 5) + 1} cópias disponíveis`;  // Quantidade de livros no estoque
+      const dataAtual = new Date();
+      const dataDevolucaoFormatted = new Date(dataAtual.setDate(dataAtual.getDate() + 7)).toLocaleDateString();
+      dataDevolucao.textContent = dataDevolucaoFormatted;
+
+      modal.style.display = 'flex';
+    }
+
+    closeModal.onclick = () => {
+      modal.style.display = 'none';
+    };
+
+    window.onclick = (event) => {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
+
+    select.addEventListener('change', () => renderCarrossel(select.value));
 
     renderCarrossel('Todos'); // inicializa mostrando todos
   </script>
