@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8"> 
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ROCKBAND - Usuário</title>
-  <link rel="stylesheet" href="usuário.css">
+  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-  <!-- Importar o Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
   <!-- Seta para voltar -->
@@ -15,40 +13,265 @@
 
   <!-- Container do usuário -->
   <div class="user-container">
-    <!-- Logo da escola -->
-    <div class="school-logo">
-      <img src="logo-escola.png" alt="Logo Escola" class="school-logo-img">
-    </div>
-
-    <!-- Logo do Rock Band -->
+    <!-- Logo -->
     <div class="logo">
       <img src="Rock Band logo Nova.png" alt="Logo Rock Band">
     </div>
 
-    <!-- Foto do gatinho -->
-    <img src="637b72e50fde8ae712fc9fd60efdeebc.jpg" alt="Gatinho do Rock" class="user-photo">
+  <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROCKBAND - Usuário</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    /* Estilo geral */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f7;
+      color: #333;
+      padding: 0 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    a {
+      text-decoration: none;
+      color: #1e90ff;
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    /* Logo */
+    .logo img {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    /* Container do usuário */
+    .user-container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 300px;
+      text-align: center;
+    }
+
+    /* Foto do usuário */
+    .user-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+
+    /* Informações do usuário */
+    .user-profile h2 {
+      font-size: 22px;
+      color: #1e90ff;
+    }
+
+    .user-profile p {
+      font-size: 16px;
+      margin-top: 5px;
+    }
+
+    /* Livro Emprestado */
+    .book-info {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .book-info h3 {
+      font-size: 18px;
+      color: #333;
+    }
+
+    .book-info p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Botão Logout */
+    .logout-btn {
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .logout-btn:hover {
+      background: #ff3333;
+    }
+
+    /* Estilo para tela responsiva */
+    @media (max-width: 600px) {
+      .user-container {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Seta para voltar -->
+  <a href="home.html" class="back-btn">&#8592; Voltar</a>
+
+  <!-- Container do usuário -->
+  <div class="user-container">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="Rock Band logo Nova.png" alt="Logo Rock Band">
+    </div>
+
+    <!-- Foto do usuário -->
+    <img src="gatinho-rock.png" alt="Gatinho do Rock" id="userPhoto" class="user-photo">
 
     <!-- Informações do usuário -->
     <div class="user-profile">
-      <h2 id="userName">Carregando...</h2> <!-- Nome do usuário -->
-      <p id="userEmail">Carregando...</p> <!-- E-mail do usuário -->
-      <p id="userCGM">CGM: Carregando...</p> <!-- CGM do usuário -->
-      <p class="user-password">Senha cadastrada ✅</p> <!-- Status da senha -->
+      <h2 id="userName">Carregando...</h2>
+      <p id="userEmail">Carregando...</p>
+      <p id="userCGM">CGM: Carregando...</p>
     </div>
 
     <!-- Livro Emprestado e Data de Devolução -->
     <div class="book-info">
       <h3>Livro Emprestado:</h3>
-      <p id="bookTitle">Carregando...</p> <!-- Nome do livro -->
-      <p id="dueDate">Data de devolução: Carregando...</p> <!-- Data de devolução -->
+      <p id="bookTitle">Carregando...</p>
+      <p id="dueDate">Data de devolução: Carregando...</p>
     </div>
 
     <!-- Logout -->
     <button id="logoutBtn" class="logout-btn">Sair</button>
   </div>
 
-  <!-- Supabase JS -->
-  <script type="module" src="usuário.js"></script>
-</body>
-</html>
+  <script type="module">
+    import { supabase } from "./supabaseClient.js";
 
+    async function init() {
+      console.log("[init] start");
+
+      // Log de mudanças de auth
+      supabase.auth.onAuthStateChange((event, session) => {
+        console.log("[onAuthStateChange]", event, session);
+        if (!session) {
+          console.warn("[onAuthStateChange] sem sessão -> redirect");
+          window.location.href = "index.html";
+        }
+      });
+
+      // Se a URL vier com hash do provider (oauth), tenta parsear a sessão
+      try {
+        if (location.hash.includes("access_token") || location.hash.includes("refresh_token")) {
+          console.log("[init] detectei tokens na URL, chamando getSessionFromUrl()");
+          await supabase.auth.getSessionFromUrl().catch(e => console.warn("getSessionFromUrl falhou:", e));
+          // limpa hash sem recarregar
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+      } catch (e) {
+        console.warn("[init] erro ao processar hash", e);
+      }
+
+      await loadUser();
+    }
+
+    async function loadUser() {
+      try {
+        console.log("[loadUser] getSession & getUser...");
+        const sessionResult = await supabase.auth.getSession();
+        console.log("[loadUser] getSession ->", sessionResult);
+
+        const userResult = await supabase.auth.getUser();
+        console.log("[loadUser] getUser ->", userResult);
+
+        // tentar obter usuário tanto por getUser() quanto por session
+        const user = userResult?.data?.user || sessionResult?.data?.session?.user;
+        if (!user) {
+          console.warn("[loadUser] nenhum usuário encontrado, redirecionando...");
+          window.location.href = "index.html";
+          return;
+        }
+
+        // Busca o perfil — uso maybeSingle pra não falhar se não houver linha
+        const { data: profile, error: profileError, status } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        console.log("[loadUser] profile fetch ->", { profile, profileError, status });
+
+        if (profileError) {
+          console.error("[loadUser] profileError", profileError);
+          throw profileError;
+        }
+
+        // Se não tiver perfil, cria um temporário no front (opcional: gravar no banco)
+        const displayName = profile?.name || user.user_metadata?.full_name || (user.email || "").split("@")[0] || "Usuário";
+
+        // Atualiza DOM
+        const elName = document.getElementById("userName");
+        const elEmail = document.getElementById("userEmail");
+        const elCGM = document.getElementById("userCGM");
+        const elPhoto = document.getElementById("userPhoto");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        if (elName) elName.textContent = displayName;
+        if (elEmail) elEmail.textContent = user.email || "";
+        if (elCGM) elCGM.textContent = profile?.cgm || "CGM não encontrado";
+        if (elPhoto) elPhoto.src = profile?.avatar_url || "gatinho-rock.png";
+
+        // Carregar livro emprestado
+        const { data: livroEmprestado, error: livroError } = await supabase
+          .from("livros_emprestados")
+          .select("titulo, data_devolucao")
+          .eq("usuario_id", user.id)
+          .single();
+
+        if (livroError) {
+          console.error("[loadUser] erro ao buscar livro emprestado:", livroError);
+        } else {
+          const elLivroTitulo = document.getElementById("bookTitle");
+          const elDataDevolucao = document.getElementById("dueDate");
+          if (elLivroTitulo) elLivroTitulo.textContent = livroEmprestado?.titulo || "Nenhum livro emprestado";
+          if (elDataDevolucao) elDataDevolucao.textContent = `Data de devolução: ${livroEmprestado?.data_devolucao || "Não definida"}`;
+        }
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", async () => {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+              console.error("[logout] erro:", error);
+              alert("Erro ao deslogar: " + error.message);
+            } else {
+              window.location.href = "index.html";
+            }
+          });
+        } else {
+          console.warn("[loadUser] botão logout não encontrado no DOM (#logoutBtn)");
+        }
+
+      } catch (err) {
+        console.error("[loadUser] erro capturado:", err);
+        const errEl = document.getElementById("errorMsg");
+        if (errEl) errEl.textContent = "Erro ao carregar perfil. Veja o console.";
+        window.location.href = "index.html";
+      }
+    }
+
+    window
