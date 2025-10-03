@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Função para mostrar mensagens
   function showMsg(el, text, type = "success") {
+    if (!el) return;
     el.textContent = text;
     el.className = `msg ${type}`;
   }
@@ -16,18 +17,26 @@ document.addEventListener("DOMContentLoaded", () => {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Captura os valores dos inputs com IDs corretos
-      const emailInput = document.getElementById("loginEmail")?.value.trim().toLowerCase();
-      const senhaInput = document.getElementById("loginPass")?.value.trim().toLowerCase();
+      const emailInputEl = document.getElementById("loginEmail");
+      const senhaInputEl = document.getElementById("loginPass");
 
-      // Verifica se os inputs existem
+      // Verifica se os elementos existem
+      if (!emailInputEl || !senhaInputEl) {
+        console.error("Inputs de email ou senha não encontrados no DOM");
+        showMsg(loginMsg, "Erro: elementos do formulário não encontrados", "error");
+        return;
+      }
+
+      const emailInput = emailInputEl.value.trim().toLowerCase();
+      const senhaInput = senhaInputEl.value.trim();
+
       if (!emailInput || !senhaInput) {
         showMsg(loginMsg, "Preencha os campos corretamente", "error");
         return;
       }
 
       try {
-        // Busca pelo email ignorando maiúsculas
+        // Busca pelo email (ignorando maiúsculas)
         const { data: usuarios, error } = await supabase
           .from('usuarios')
           .select('*')
@@ -38,20 +47,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const usuario = usuarios[0];
 
-        // Compara a senha ignorando maiúsculas e espaços
-        if (!usuario.senha || usuario.senha.trim().toLowerCase() !== senhaInput) {
+        // Compara a senha
+        if (!usuario.senha || usuario.senha !== senhaInput) {
           throw new Error("E-mail ou senha incorretos");
         }
 
-        // Salva dados do usuário na sessão
+        // Salva na sessão
         sessionStorage.setItem("usuario", JSON.stringify(usuario));
         showMsg(loginMsg, "Login realizado com sucesso!", "success");
 
         setTimeout(() => window.location.href = "Home.html", 500);
 
       } catch (err) {
-        showMsg(loginMsg, "Erro: " + err.message, "error");
         console.error("Login erro:", err);
+        showMsg(loginMsg, "Erro: " + err.message, "error");
       }
     });
   }
@@ -64,13 +73,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!usuario) {
       window.location.href = "index.html";
-    } else if (userNameEl && userTipoEl) {
+    } else if (userNameEl) {
       userNameEl.textContent = usuario.email;
+    }
+
+    if (userTipoEl) {
       userTipoEl.textContent = usuario.tipo;
     }
   }
 
-  if (document.getElementById("userName")) {
+  if (document.getElementById("userName") || document.getElementById("userTipo")) {
     checkSession();
   }
 
@@ -84,4 +96,3 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
-
