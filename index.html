@@ -11,6 +11,7 @@
     .container { width: 360px; padding:32px; border:2px solid #1e90ff; border-radius:12px; display:flex; flex-direction:column; gap:16px; }
     .container h2 { text-align:center; color:#1e90ff; margin:0; }
     .field input { width:100%; padding:12px; border-radius:8px; border:1px solid rgba(30,144,255,0.4); }
+    .field select { width:100%; padding:12px; border-radius:8px; border:1px solid rgba(30,144,255,0.4); }
     .btn { width:100%; padding:12px; border:none; border-radius:8px; background:#1e90ff; color:#fff; cursor:pointer; font-weight:700; }
     .btn:hover { background:#104e8b; }
     .msg { text-align:center; font-size:14px; color:#d9534f; }
@@ -24,6 +25,12 @@
     <img src="download.png" alt="Logo da Escola" class="logo" />
 
     <form id="loginForm">
+      <div class="field">
+        <select id="userSelect">
+          <option value="isabelly">isabelly.bohn@escola.pr.gov.br</option>
+          <option value="nathan">nathan.gusso@escola.pr.gov.br</option>
+        </select>
+      </div>
       <div class="field">
         <input type="email" id="loginEmail" placeholder="Email" required />
       </div>
