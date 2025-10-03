@@ -30,11 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const usuario = usuarios[0];
 
-        // Compara a senha em minúsculas
-        if (!usuario.senha || usuario.senha.trim().toLowerCase() !== senhaInput) {
-          throw new Error("E-mail ou senha incorretos");
-        }
-
         // Salva na sessão
         sessionStorage.setItem("usuario", JSON.stringify(usuario));
         showMsg(loginMsg, "Login realizado com sucesso!", "success");
