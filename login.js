@@ -15,16 +15,25 @@ if (loginForm) {
     e.preventDefault();
 
     const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-    const password = document.getElementById("loginPass").value;
+    const senha = document.getElementById("loginSenha").value;
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      if (!data.session) throw new Error("Sessão não iniciada. Verifique suas credenciais.");
+      // Consulta a tabela 'usuarios' para verificar email e senha
+      const { data: usuario, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('email', email)
+        .eq('senha', senha)
+        .single();
+
+      if (error || !usuario) throw new Error("E-mail ou senha incorretos");
+
+      // Salva dados do usuário na sessão
+      sessionStorage.setItem("usuario", JSON.stringify(usuario));
 
       showMsg(loginMsg, "Login realizado com sucesso!", "success");
 
-      // Redireciona após login
+      // Redireciona para Home.html
       setTimeout(() => window.location.href = "Home.html", 500);
 
     } catch (err) {
@@ -35,32 +44,31 @@ if (loginForm) {
 }
 
 // ===== VERIFICAÇÃO DE SESSÃO =====
-supabase.auth.onAuthStateChange((event, session) => {
+function checkSession() {
+  const usuario = JSON.parse(sessionStorage.getItem("usuario"));
   const userNameEl = document.getElementById("userName");
-  const userEmailEl = document.getElementById("userEmail");
+  const userTipoEl = document.getElementById("userTipo");
 
-  if (!session || !session.user) {
-    if (!window.location.pathname.endsWith("index.html")) {
-      window.location.href = "index.html";
-    }
-  } else if (userNameEl && userEmailEl) {
-    // Preenche dados do usuário
-    userNameEl.textContent = session.user.user_metadata?.full_name || "Usuário";
-    userEmailEl.textContent = session.user.email;
+  if (!usuario) {
+    // Se não estiver logado, volta para login
+    window.location.href = "index.html";
+  } else if (userNameEl && userTipoEl) {
+    // Preenche informações na Home
+    userNameEl.textContent = usuario.email;
+    userTipoEl.textContent = usuario.tipo;
   }
-});
+}
+
+// Chama a verificação na Home.html
+if (document.getElementById("userName")) {
+  checkSession();
+}
 
 // ===== LOGOUT =====
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
-  logoutBtn.addEventListener("click", async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      window.location.href = "index.html";
-    } catch (err) {
-      console.error("Erro ao deslogar:", err);
-      alert("Não foi possível sair. Tente novamente.");
-    }
+  logoutBtn.addEventListener("click", () => {
+    sessionStorage.removeItem("usuario");
+    window.location.href = "index.html";
   });
 }
