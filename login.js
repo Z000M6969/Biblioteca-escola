@@ -16,9 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Captura os valores corretos do HTML
-      const emailInput = document.getElementById("loginEmail").value.trim().toLowerCase();
-      const senhaInput = document.getElementById("loginPass").value.trim().toLowerCase();
+      // Captura os valores dos inputs com IDs corretos
+      const emailInput = document.getElementById("loginEmail")?.value.trim().toLowerCase();
+      const senhaInput = document.getElementById("loginPass")?.value.trim().toLowerCase();
+
+      // Verifica se os inputs existem
+      if (!emailInput || !senhaInput) {
+        showMsg(loginMsg, "Preencha os campos corretamente", "error");
+        return;
+      }
 
       try {
         // Busca pelo email ignorando maiúsculas
@@ -37,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
           throw new Error("E-mail ou senha incorretos");
         }
 
-        // Salva na sessão
+        // Salva dados do usuário na sessão
         sessionStorage.setItem("usuario", JSON.stringify(usuario));
         showMsg(loginMsg, "Login realizado com sucesso!", "success");
 
@@ -78,3 +84,4 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
