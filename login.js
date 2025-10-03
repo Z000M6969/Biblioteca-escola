@@ -15,14 +15,14 @@ if (loginForm) {
     e.preventDefault();
 
     const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-    const senha = document.getElementById("loginPass").value.trim();
+    const senha = document.getElementById("loginPass").value.trim().toLowerCase(); // tudo minúsculo
 
     try {
       // Consulta a tabela 'usuarios' para verificar email e senha
       const { data: usuario, error } = await supabase
         .from('usuarios')
         .select('*')
-        .ilike('email', email) // case-insensitive no email
+        .eq('email', email)
         .eq('senha', senha)
         .single();
 
