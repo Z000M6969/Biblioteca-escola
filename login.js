@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const emailInput = document.getElementById("loginEmail").value.trim().toLowerCase();
-      const senhaInput = document.getElementById("loginPass").value.trim().toLowerCase();
+      const emailInput = document.getElementById("loginemail").value.trim().toLowerCase();
+      const senhaInput = document.getElementById("loginpass").value.trim().toLowerCase();
 
       try {
         // Busca pelo email ignorando maiúsculas
