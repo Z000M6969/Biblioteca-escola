@@ -2,27 +2,25 @@ import { supabase } from './supabaseClient.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ===== Função para mostrar mensagens =====
+  const loginForm = document.getElementById("loginForm");
+  const loginMsg = document.getElementById("loginMsg");
+
+  // Função para mostrar mensagens
   function showMsg(el, text, type = "success") {
     el.textContent = text;
     el.className = `msg ${type}`;
   }
 
-  // ===== LOGIN =====
-  const loginForm = document.getElementById("loginForm");
-  const loginMsg = document.getElementById("loginMsg");
-
+  // LOGIN
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      console.log("Form submit clicado!"); // debug
 
       const email = document.getElementById("loginEmail").value.trim().toLowerCase();
       const senha = document.getElementById("loginPass").value.trim().toLowerCase();
 
-      console.log("Tentando login com:", email, senha); // DEBUG
-
       try {
-        // Consulta a tabela 'usuarios' para verificar email e senha
         const { data: usuario, error } = await supabase
           .from('usuarios')
           .select('*')
@@ -30,14 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
           .eq('senha', senha)
           .single();
 
+        console.log("Resultado Supabase:", usuario, error);
+
         if (error || !usuario) throw new Error("E-mail ou senha incorretos");
 
-        // Salva dados do usuário na sessão
+        // Salva na sessão
         sessionStorage.setItem("usuario", JSON.stringify(usuario));
-
         showMsg(loginMsg, "Login realizado com sucesso!", "success");
 
-        // Redireciona para Home.html
         setTimeout(() => window.location.href = "Home.html", 500);
 
       } catch (err) {
@@ -47,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== VERIFICAÇÃO DE SESSÃO =====
+  // VERIFICAÇÃO DE SESSÃO NA HOME
   function checkSession() {
     const usuario = JSON.parse(sessionStorage.getItem("usuario"));
     const userNameEl = document.getElementById("userName");
@@ -65,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkSession();
   }
 
-  // ===== LOGOUT =====
+  // LOGOUT
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
