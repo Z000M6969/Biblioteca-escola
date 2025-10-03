@@ -5,18 +5,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
   const loginMsg = document.getElementById("loginMsg");
 
-  // Função para mostrar mensagens
   function showMsg(el, text, type = "success") {
     el.textContent = text;
     el.className = `msg ${type}`;
   }
 
+  // ===== LOGIN =====
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const emailInput = document.getElementById("loginEmail").value.trim().toLowerCase();
-      const senhaInput = document.getElementById("loginPass").value.trim();
+      const senhaInput = document.getElementById("loginPass").value.trim().toLowerCase();
 
       try {
         // Busca pelo email ignorando maiúsculas
@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const usuario = usuarios[0];
 
-        // Compara a senha em minúsculas para garantir
-        if (usuario.senha.trim().toLowerCase() !== senhaInput.toLowerCase()) {
+        // Compara a senha em minúsculas
+        if (!usuario.senha || usuario.senha.trim().toLowerCase() !== senhaInput) {
           throw new Error("E-mail ou senha incorretos");
         }
 
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== Verificação de sessão =====
+  // ===== VERIFICAÇÃO DE SESSÃO =====
   function checkSession() {
     const usuario = JSON.parse(sessionStorage.getItem("usuario"));
     const userNameEl = document.getElementById("userName");
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkSession();
   }
 
-  // ===== Logout =====
+  // ===== LOGOUT =====
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
