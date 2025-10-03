@@ -11,26 +11,29 @@ document.addEventListener("DOMContentLoaded", () => {
     el.className = `msg ${type}`;
   }
 
-  // LOGIN
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      console.log("Form submit clicado!"); // debug
 
-      const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-      const senha = document.getElementById("loginPass").value.trim().toLowerCase();
+      const emailInput = document.getElementById("loginEmail").value.trim().toLowerCase();
+      const senhaInput = document.getElementById("loginPass").value.trim();
 
       try {
-        const { data: usuario, error } = await supabase
+        // Busca pelo email ignorando maiúsculas
+        const { data: usuarios, error } = await supabase
           .from('usuarios')
           .select('*')
-          .eq('email', email)
-          .eq('senha', senha)
-          .single();
+          .ilike('email', emailInput);
 
-        console.log("Resultado Supabase:", usuario, error);
+        if (error) throw error;
+        if (!usuarios || usuarios.length === 0) throw new Error("E-mail ou senha incorretos");
 
-        if (error || !usuario) throw new Error("E-mail ou senha incorretos");
+        const usuario = usuarios[0];
+
+        // Compara a senha em minúsculas para garantir
+        if (usuario.senha.trim().toLowerCase() !== senhaInput.toLowerCase()) {
+          throw new Error("E-mail ou senha incorretos");
+        }
 
         // Salva na sessão
         sessionStorage.setItem("usuario", JSON.stringify(usuario));
@@ -45,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // VERIFICAÇÃO DE SESSÃO NA HOME
+  // ===== Verificação de sessão =====
   function checkSession() {
     const usuario = JSON.parse(sessionStorage.getItem("usuario"));
     const userNameEl = document.getElementById("userName");
@@ -63,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkSession();
   }
 
-  // LOGOUT
+  // ===== Logout =====
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
