@@ -2,8 +2,8 @@ import { supabase } from './supabaseClient.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const loginForm = document.getElementById("loginForm");
-  const loginMsg = document.getElementById("loginMsg");
+ const emailInput = document.getElementById("loginEmail").value.trim().toLowerCase();
+const senhaInput = document.getElementById("loginPass").value.trim().toLowerCase();
 
   function showMsg(el, text, type = "success") {
     el.textContent = text;
