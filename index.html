@@ -47,45 +47,60 @@ import { supabase } from "./supabaseClient.js";
 const loginForm = document.getElementById("loginForm");
 const loginMsg = document.getElementById("loginMsg");
 
-loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  const cgm = document.getElementById("loginCGM").value.trim();
-  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-  const password = document.getElementById("loginPass").value;
+    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+    const password = document.getElementById("loginPass").value;
 
-  try {
-    // 1️⃣ Autenticação pelo Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
-    if (authError) throw authError;
-    if (!authData.session) throw new Error("Credenciais inválidas.");
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (!data.session) throw new Error("Sessão não iniciada. Verifique suas credenciais.");
 
-    // 2️⃣ Verificar CGM na tabela 'usuarios'
-    const { data: usuario, error: userError } = await supabase
-      .from("usuarios")
-      .select("*")
-      .eq("id", authData.user.id) // assume que a tabela 'usuarios' tem o id do auth user
-      .maybeSingle();
+      showMsg(loginMsg, "Login realizado com sucesso!", "success");
 
-    if (userError) throw userError;
-    if (!usuario) throw new Error("Usuário não encontrado na tabela 'usuarios'.");
-    if (usuario.cgm !== cgm) throw new Error("CGM incorreto!");
+      // Redireciona após login
+      setTimeout(() => window.location.href = "home.html", 500);
 
-    // LOGIN OK
-    loginMsg.classList.add("success");
-    loginMsg.textContent = "Login efetuado com sucesso!";
+    } catch (err) {
+      showMsg(loginMsg, "Erro: " + err.message, "error");
+      console.error("Login erro:", err);
+    }
+  });
+}
 
-    // salvar dados do usuário localmente
-    localStorage.setItem("usuario", JSON.stringify(usuario));
+// ===== VERIFICAÇÃO DE SESSÃO =====
+supabase.auth.onAuthStateChange((event, session) => {
+  const userNameEl = document.getElementById("userName");
+  const userEmailEl = document.getElementById("userEmail");
 
-    // redirecionar para Home
-    window.location.href = "home.html";
-
-  } catch (err) {
-    loginMsg.classList.remove("success");
-    loginMsg.textContent = "Erro: " + err.message;
+  if (!session || !session.user) {
+    if (!window.location.pathname.endsWith("index.html")) {
+      window.location.href = "index.html";
+    }
+  } else if (userNameEl && userEmailEl) {
+    // Preenche dados do usuário
+    userNameEl.textContent = session.user.user_metadata?.full_name || "Usuário";
+    userEmailEl.textContent = session.user.email;
   }
 });
+
+// ===== LOGOUT =====
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      window.location.href = "index.html";
+    } catch (err) {
+      console.error("Erro ao deslogar:", err);
+      alert("Não foi possível sair. Tente novamente.");
+    }
+  });
+}
 </script>
 
 </body>
