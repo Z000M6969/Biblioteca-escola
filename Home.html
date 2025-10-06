@@ -5,60 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biblioteca Escolar</title>
 
-  <!-- Importando o Font Awesome para os ícones -->
+  <!-- Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f4f4; }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-    }
-
-    /* Barra de Navegação Azul */
+    /* Barra de Navegação */
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #007BFF; /* Azul */
+      background-color: #007BFF;
       padding: 10px 30px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      height: 70px;
     }
 
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      font-size: 20px;
-      margin: 0 15px;
-      padding: 10px;
-    }
-
-    .navbar a:hover {
-      color: #ffcc00;
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
     .navbar .logo img {
-      height: 45px;
+      height: 40px;
       width: auto;
     }
 
-    .navbar .nav-links {
-      display: flex;
-      gap: 20px;
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      padding: 10px;
     }
 
-    /* Barra de Pesquisa - Fundo Branco */
+    .nav-links a:hover {
+      color: #ffcc00;
+    }
+
     .navbar .search {
       display: flex;
       align-items: center;
@@ -85,16 +70,12 @@
     .banner {
       width: 100%;
       height: 250px;
-      background-image: url('https://github.com/usuario/repositorio/raw/main/caminho_da_imagem.jpg');
+      background-image: url('colorful-book-magazine-library-shelf-600nw-2419079741.webp');
       background-size: cover;
       background-position: center;
-      margin-top: 70px; /* deixa espaço para a navbar fixa */
     }
 
-    h1 {
-      text-align: center;
-      margin: 20px 0;
-    }
+    h1 { text-align: center; margin: 20px 0; }
 
     #generoSelect {
       display: block;
@@ -105,15 +86,8 @@
       border: 1px solid #aaa;
     }
 
-    .genero {
-      margin: 20px;
-    }
-
-    .carrossel-wrapper {
-      position: relative;
-      overflow: hidden;
-    }
-
+    .genero { margin: 20px; }
+    .carrossel-wrapper { position: relative; overflow: hidden; }
     .carrossel {
       display: flex;
       gap: 10px;
@@ -133,10 +107,7 @@
       transition: transform 0.3s;
     }
 
-    .livro:hover {
-      transform: scale(1.05);
-    }
-
+    .livro:hover { transform: scale(1.05); }
     .livro img {
       width: 100%;
       height: 200px;
@@ -157,13 +128,8 @@
       border-radius: 50%;
     }
 
-    .btn-left {
-      left: 5px;
-    }
-
-    .btn-right {
-      right: 5px;
-    }
+    .btn-left { left: 5px; }
+    .btn-right { right: 5px; }
 
     /* Modal */
     #modal {
@@ -202,21 +168,22 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background: #0056b3;
-    }
+    button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
   <!-- Barra de Navegação -->
   <div class="navbar">
-    <div class="logo">
-      <img src="download.png" alt="Logo da Escola">
+    <div class="navbar-left">
+      <div class="logo">
+        <img src="download.png" alt="Logo da Escola">
+      </div>
+      <div class="nav-links">
+        <a href="Home.html"><i class="fas fa-home"></i></a>
+        <a href="usuario.html"><i class="fas fa-user"></i></a>
+      </div>
     </div>
-    <div class="nav-links">
-      <a href="Home.html"><i class="fas fa-home"></i></a>
-      <a href="usuario.html"><i class="fas fa-user"></i></a>
-    </div>
+
     <div class="search">
       <input type="text" placeholder="Pesquisar...">
       <i class="fas fa-search"></i>
@@ -240,131 +207,5 @@
       <button id="btnEmprestar">Emprestar</button>
     </div>
   </div>
-
-  <!-- Importa a biblioteca do Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://uhohygfsqwpmymjhzirs.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVob2h5Z2ZzcXdwbXltamh6aXJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTM0NDEwNywiZXhwIjoyMDc0OTIwMTA3fQ.9iI1-fVvjV92HwwHRTafOwE6gWcn08QWARJKIvTucKc'
-    );
-
-    const generos = ['Todos', 'Aventura', 'Biografia', 'Clássicos', 'Conto', 'Crônica', 'Drama', 'Educação', 'Fantasia', 'Ficção Científica', 'Filosofia', 'História', 'Humor', 'Infantil', 'Mistério', 'Policial', 'Poesia', 'Romance', 'Terror', 'Autoajuda', 'Religião', 'Saúde', 'Tecnologia', 'Economia', 'Artes'];
-    const select = document.getElementById('generoSelect');
-    generos.forEach(g => {
-      const opt = document.createElement('option');
-      opt.value = g;
-      opt.textContent = g;
-      select.appendChild(opt);
-    });
-
-    const container = document.getElementById('carrosseisContainer');
-    const modal = document.getElementById('modal');
-    const closeModal = document.querySelector('.close');
-    const livroTitulo = document.getElementById('livroTitulo');
-    const sinopse = document.getElementById('sinopse');
-    const dataDevolucao = document.getElementById('dataDevolucao');
-    const estoque = document.getElementById('estoque');
-    const btnEmprestar = document.getElementById('btnEmprestar');
-
-    async function renderCarrossel(genero) {
-      container.innerHTML = '';
-
-      try {
-        let query = supabase.from('livros').select('*');
-        if (genero !== 'Todos') query = query.eq('genero', genero);
-
-        const { data, error } = await query;
-        if (error) {
-          console.error('Erro ao carregar livros:', error);
-          return;
-        }
-
-        if (data && data.length > 0) {
-          data.forEach(livro => createCarrossel(livro));
-        } else {
-          container.innerHTML = "<p style='text-align:center;'>Não há livros para este gênero.</p>";
-        }
-      } catch (err) {
-        console.error('Erro geral:', err);
-      }
-    }
-
-    function createCarrossel(livro) {
-      const sec = document.createElement('section');
-      sec.className = 'genero';
-      const h2 = document.createElement('h2');
-      h2.textContent = 'Livros';
-      sec.appendChild(h2);
-
-      const wrapper = document.createElement('div');
-      wrapper.className = 'carrossel-wrapper';
-      const carrossel = document.createElement('div');
-      carrossel.className = 'carrossel';
-
-      const livroDiv = document.createElement('div');
-      livroDiv.className = 'livro';
-      const img = document.createElement('img');
-      img.src = livro.imagem || 'default.jpg';
-      img.alt = livro.titulo;
-      const p = document.createElement('p');
-      p.textContent = livro.titulo;
-
-      livroDiv.appendChild(img);
-      livroDiv.appendChild(p);
-      livroDiv.onclick = () => mostrarDetalhes(livro);
-      carrossel.appendChild(livroDiv);
-
-      const btnLeft = document.createElement('button');
-      btnLeft.className = 'btn-carrossel btn-left';
-      btnLeft.innerHTML = '&#10094;';
-      btnLeft.onclick = () => carrossel.scrollBy({ left: -carrossel.clientWidth / 2, behavior: 'smooth' });
-
-      const btnRight = document.createElement('button');
-      btnRight.className = 'btn-carrossel btn-right';
-      btnRight.innerHTML = '&#10095;';
-      btnRight.onclick = () => carrossel.scrollBy({ left: carrossel.clientWidth / 2, behavior: 'smooth' });
-
-      wrapper.appendChild(btnLeft);
-      wrapper.appendChild(carrossel);
-      wrapper.appendChild(btnRight);
-
-      sec.appendChild(wrapper);
-      container.appendChild(sec);
-    }
-
-    function mostrarDetalhes(livro) {
-      livroTitulo.textContent = livro.titulo;
-      sinopse.textContent = livro.sinopse;
-      estoque.textContent = `Em estoque: ${livro.estoque}`;
-      dataDevolucao.textContent = livro.data_devolucao || 'Não disponível';
-      modal.style.display = 'flex';
-    }
-
-    closeModal.onclick = () => {
-      modal.style.display = 'none';
-    };
-
-    btnEmprestar.onclick = async () => {
-      const livroId = livroTitulo.textContent;
-      const { data, error } = await supabase
-        .from('livros')
-        .update({ estoque: supabase.raw('estoque - 1') })
-        .eq('titulo', livroId);
-      
-      if (error) {
-        alert('Erro ao realizar o empréstimo!');
-        console.error(error);
-      } else {
-        alert('Livro emprestado com sucesso!');
-        modal.style.display = 'none';
-      }
-    };
-
-    select.addEventListener('change', () => renderCarrossel(select.value));
-
-    renderCarrossel('Todos');
-  </script>
 </body>
 </html>
