@@ -119,12 +119,12 @@ generoSelect.addEventListener('change', () => {
 });
 
 // 🔹 Pesquisa
-btnPesquisar.addEventListener('click', () => {
-  const termo = pesquisaInput.value.toLowerCase();
-  const filtrados = livros.filter(l => 
+const filtrados = livros.filter(l => 
     l.titulo.toLowerCase().includes(termo) || 
     l.genero.toLowerCase().includes(termo) ||
-  );
+    (l.autor && l.autor.toLowerCase().includes(termo))
+);
+
   exibirLivros(filtrados);
 });
 
