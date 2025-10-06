@@ -1,22 +1,17 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-// Conexão Supabase
-const supabaseUrl = 'https://uhohygfsqwpmymjhzirs.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVob2h5Z2ZzcXdwbXltaGp6aXJzIiwiaWF0IjoxNjk0NTMyMjc5LCJleHAiOjIwMTAxMDgyNzl9.GQtYcOnH3Qu8Z8OEVvVNNu3WYN7GEAKfHvL44RgNWZg';
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from './supabaseClient.js';
 
 const generoSelect = document.getElementById('generoSelect');
 const container = document.getElementById('carrosseisContainer');
-const pesquisaInput = document.getElementById('pesquisa');
-const btnPesquisar = document.getElementById('btnPesquisar');
+const pesquisaInput = document.getElementById('campo-pesquisa');
+const btnPesquisar = document.getElementById('btn-pesquisar');
 
 let livros = [];
 
-// 🔹 Buscar livros do banco
+// 🔹 Carregar livros do banco
 async function carregarLivros() {
   const { data, error } = await supabase.from('livros').select('*');
   if (error) {
-    console.error("Erro ao carregar livros:", error);
+    console.error('Erro ao carregar livros:', error);
     return;
   }
   livros = data;
@@ -24,7 +19,7 @@ async function carregarLivros() {
   exibirLivros(livros);
 }
 
-// 🔹 Pegar lista de gêneros únicos
+// 🔹 Preencher select de gêneros
 function carregarGeneros() {
   const generos = [...new Set(livros.map(l => l.genero).filter(Boolean))];
   generoSelect.innerHTML = `<option value="todos">Todos os gêneros</option>`;
@@ -36,14 +31,15 @@ function carregarGeneros() {
   });
 }
 
-// 🔹 Mostrar livros em carrossel
+// 🔹 Exibir livros em carrossel
 function exibirLivros(lista) {
   container.innerHTML = '';
   const livrosPorGenero = {};
 
   lista.forEach(livro => {
-    if (!livrosPorGenero[livro.genero]) livrosPorGenero[livro.genero] = [];
-    livrosPorGenero[livro.genero].push(livro);
+    const genero = livro.genero || 'Sem gênero';
+    if (!livrosPorGenero[genero]) livrosPorGenero[genero] = [];
+    livrosPorGenero[genero].push(livro);
   });
 
   Object.keys(livrosPorGenero).forEach(genero => {
@@ -56,6 +52,7 @@ function exibirLivros(lista) {
       <button class="btn-carrossel btn-right">❯</button>
     `;
     const carrossel = wrapper.querySelector('.carrossel');
+
     livrosPorGenero[genero].forEach(l => {
       const item = document.createElement('div');
       item.classList.add('livro');
@@ -66,7 +63,7 @@ function exibirLivros(lista) {
       carrossel.appendChild(item);
     });
 
-    // Rolagem
+    // Botões de rolagem
     wrapper.querySelector('.btn-left').addEventListener('click', () => carrossel.scrollBy({ left: -200, behavior: 'smooth' }));
     wrapper.querySelector('.btn-right').addEventListener('click', () => carrossel.scrollBy({ left: 200, behavior: 'smooth' }));
 
@@ -74,7 +71,7 @@ function exibirLivros(lista) {
   });
 }
 
-// 🔹 Filtrar por gênero
+// 🔹 Filtro por gênero
 generoSelect.addEventListener('change', () => {
   const genero = generoSelect.value;
   if (genero === 'todos') {
@@ -84,12 +81,12 @@ generoSelect.addEventListener('change', () => {
   }
 });
 
-// 🔹 Pesquisa
+// 🔹 Pesquisa por título ou gênero
 btnPesquisar.addEventListener('click', () => {
   const termo = pesquisaInput.value.toLowerCase();
   const filtrados = livros.filter(l => 
-    l.titulo.toLowerCase().includes(termo) || 
-    l.genero.toLowerCase().includes(termo)
+    (l.titulo && l.titulo.toLowerCase().includes(termo)) || 
+    (l.genero && l.genero.toLowerCase().includes(termo))
   );
   exibirLivros(filtrados);
 });
