@@ -19,7 +19,7 @@ async function carregarLivros() {
   exibirLivros(livros);
 }
 
-// 🔹 Pegar lista de gêneros únicos
+// 🔹 Carregar gêneros únicos
 function carregarGeneros() {
   const generos = [...new Set(livros.map(l => l.genero).filter(Boolean))];
   generoSelect.innerHTML = `<option value="todos">Todos os gêneros</option>`;
@@ -31,7 +31,7 @@ function carregarGeneros() {
   });
 }
 
-// 🔹 Mostrar livros em carrossel
+// 🔹 Exibir livros
 function exibirLivros(lista) {
   container.innerHTML = '';
   const livrosPorGenero = {};
@@ -53,18 +53,18 @@ function exibirLivros(lista) {
     `;
     const carrossel = wrapper.querySelector('.carrossel');
 
-  livrosPorGenero[genero].forEach(l => {
-  const item = document.createElement('div');
-  item.classList.add('livro');
-  item.innerHTML = `
-    <img src="${l.imagem || 'placeholder.jpg'}" alt="${l.titulo}">
-    <p><strong>${l.titulo}</strong></p>
-    <p>${l.autor || 'Autor desconhecido'}</p>
-  `;
-  carrossel.appendChild(item);
-});
+    livrosPorGenero[genero].forEach(l => {
+      const item = document.createElement('div');
+      item.classList.add('livro');
+      item.innerHTML = `
+        <img src="${l.imagem || 'placeholder.jpg'}" alt="${l.titulo}">
+        <p><strong>${l.titulo}</strong></p>
+        <p>${l.autor || 'Autor desconhecido'}</p>
+      `;
+      item.addEventListener('click', () => abrirModal(l));
+      carrossel.appendChild(item);
+    });
 
-    // Rolagem carrossel
     wrapper.querySelector('.btn-left').addEventListener('click', () => carrossel.scrollBy({ left: -200, behavior: 'smooth' }));
     wrapper.querySelector('.btn-right').addEventListener('click', () => carrossel.scrollBy({ left: 200, behavior: 'smooth' }));
 
@@ -118,15 +118,16 @@ generoSelect.addEventListener('change', () => {
   }
 });
 
-// 🔹 Pesquisa
-const filtrados = livros.filter(l => 
-    l.titulo.toLowerCase().includes(termo) || 
-    l.genero.toLowerCase().includes(termo) ||
-    (l.autor && l.autor.toLowerCase().includes(termo))
-);
-
+// 🔹 Pesquisa por título ou autor
+btnPesquisar.addEventListener('click', () => {
+  const termo = pesquisaInput.value.toLowerCase();
+  const filtrados = livros.filter(l =>
+    l.titulo.toLowerCase().includes(termo) ||
+    (l.autor && l.autor.toLowerCase().includes(termo)) ||
+    (l.genero && l.genero.toLowerCase().includes(termo))
+  );
   exibirLivros(filtrados);
 });
 
-// 🔹 Executar ao abrir
+// 🔹 Inicializar
 carregarLivros();
