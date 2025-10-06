@@ -17,27 +17,26 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #007BFF;
-      padding: 15px 30px;
+      background-color: white;
+      padding: 10px 30px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .navbar a {
-      color: white;
+      color: #333;
       text-decoration: none;
-      padding: 10px 15px;
-      font-size: 18px;
-      text-align: center;
+      font-size: 20px;
+      margin: 0 15px;
+      padding: 10px;
     }
 
     .navbar a:hover {
-      background-color: #0056b3;
-      border-radius: 5px;
+      color: #007BFF;
     }
 
-    .navbar .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: white;
+    .navbar .logo img {
+      height: 40px;
+      width: auto;
     }
 
     .navbar .nav-links {
@@ -45,8 +44,13 @@
       gap: 20px;
     }
 
-    .navbar .nav-links i {
-      margin-right: 8px;
+    /* Banner */
+    .banner {
+      background: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
     }
 
     h1 { text-align: center; margin: 20px 0; }
@@ -148,12 +152,20 @@
 <body>
   <!-- Barra de Navegação -->
   <div class="navbar">
-    <div class="logo">Escola ABC</div>
-    <div class="nav-links">
-      <a href="#"><i class="fas fa-home"></i>Home</a>
-      <a href="#"><i class="fas fa-user"></i>Perfil</a>
-      <a href="#"><i class="fas fa-search"></i>Pesquisar</a>
+    <div class="logo">
+      <!-- Logo da Escola, substitua o caminho da imagem conforme necessário -->
+      <img src="logo.png" alt="Logo da Escola">
     </div>
+    <div class="nav-links">
+      <a href="#"><i class="fas fa-home"></i></a>
+      <a href="#"><i class="fas fa-user"></i></a>
+      <a href="#"><i class="fas fa-search"></i></a>
+    </div>
+  </div>
+
+  <!-- Banner -->
+  <div class="banner">
+    Bem-vindo à Biblioteca Escolar!
   </div>
 
   <h1>Biblioteca Escolar</h1>
@@ -179,7 +191,6 @@
     const supabase = window.supabase.createClient(
       'https://uhohygfsqwpmymjhzirs.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVob2h5Z2ZzcXdwbXltamh6aXJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTM0NDEwNywiZXhwIjoyMDc0OTIwMTA3fQ.9iI1-fVvjV92HwwHRTafOwE6gWcn08QWARJKIvTucKc'
-      
     );
 
     const generos = ['Todos', 'Aventura', 'Biografia', 'Clássicos', 'Conto', 'Crônica', 'Drama', 'Educação', 'Fantasia', 'Ficção Científica', 'Filosofia', 'História', 'Humor', 'Infantil', 'Mistério', 'Policial', 'Poesia', 'Romance', 'Terror', 'Autoajuda', 'Religião', 'Saúde', 'Tecnologia', 'Economia', 'Artes'];
@@ -279,7 +290,7 @@
     };
 
     btnEmprestar.onclick = async () => {
-      const livroId = livroTitulo.textContent; // Assumindo que o título é único
+      const livroId = livroTitulo.textContent;
       const { data, error } = await supabase
         .from('livros')
         .update({ estoque: supabase.raw('estoque - 1') })
