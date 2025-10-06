@@ -12,18 +12,18 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: Arial, sans-serif; background: #f4f4f4; }
 
-    /* Barra de Navegação */
+    /* Barra de Navegação Azul */
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: white;
+      background-color: #007BFF; /* Azul */
       padding: 10px 30px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .navbar a {
-      color: #333;
+      color: white;
       text-decoration: none;
       font-size: 20px;
       margin: 0 15px;
@@ -31,7 +31,7 @@
     }
 
     .navbar a:hover {
-      color: #007BFF;
+      color: #ffcc00; /* cor de hover dourada */
     }
 
     .navbar .logo img {
@@ -42,6 +42,29 @@
     .navbar .nav-links {
       display: flex;
       gap: 20px;
+    }
+
+    /* Barra de Pesquisa - Fundo Branco */
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border-radius: 25px;
+      padding: 5px 10px;
+    }
+
+    .navbar .search input {
+      border: none;
+      outline: none;
+      padding: 5px 10px;
+      font-size: 16px;
+      border-radius: 20px;
+    }
+
+    .navbar .search i {
+      color: #007BFF; /* Cor azul para o ícone */
+      margin-left: 10px;
+      cursor: pointer;
     }
 
     /* Banner */
@@ -159,7 +182,10 @@
     <div class="nav-links">
       <a href="#"><i class="fas fa-home"></i></a>
       <a href="#"><i class="fas fa-user"></i></a>
-      <a href="#"><i class="fas fa-search"></i></a>
+    </div>
+    <div class="search">
+      <input type="text" placeholder="Pesquisar...">
+      <i class="fas fa-search"></i>
     </div>
   </div>
 
