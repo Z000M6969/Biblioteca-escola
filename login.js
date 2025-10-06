@@ -56,7 +56,7 @@ if (loginForm) {
       showMsg(loginMsg, "Login realizado com sucesso!", "success");
 
       // Redireciona após login
-      setTimeout(() => window.location.href = "home.html", 500);
+      setTimeout(() => window.location.href = "Home.html", 500);
 
     } catch (err) {
       showMsg(loginMsg, "Erro: " + err.message, "error");
