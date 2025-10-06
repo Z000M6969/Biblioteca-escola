@@ -9,8 +9,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; background: #f4f4f4; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
 
     /* Barra de Navegação Azul */
     .navbar {
@@ -20,6 +28,12 @@
       background-color: #007BFF; /* Azul */
       padding: 10px 30px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 70px;
     }
 
     .navbar a {
@@ -31,11 +45,11 @@
     }
 
     .navbar a:hover {
-      color: #ffcc00; /* cor de hover dourada */
+      color: #ffcc00;
     }
 
     .navbar .logo img {
-      height: 40px;
+      height: 45px;
       width: auto;
     }
 
@@ -62,7 +76,7 @@
     }
 
     .navbar .search i {
-      color: #007BFF; /* Cor azul para o ícone */
+      color: #007BFF;
       margin-left: 10px;
       cursor: pointer;
     }
@@ -70,13 +84,17 @@
     /* Banner */
     .banner {
       width: 100%;
-      height: 250px; /* ajuste a altura conforme necessário */
-      background-image: url('https://github.com/usuario/repositorio/raw/main/caminho_da_imagem.jpg'); /* substitua o link pelo seu caminho real */
+      height: 250px;
+      background-image: url('https://github.com/usuario/repositorio/raw/main/caminho_da_imagem.jpg');
       background-size: cover;
       background-position: center;
+      margin-top: 70px; /* deixa espaço para a navbar fixa */
     }
 
-    h1 { text-align: center; margin: 20px 0; }
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
 
     #generoSelect {
       display: block;
@@ -87,8 +105,15 @@
       border: 1px solid #aaa;
     }
 
-    .genero { margin: 20px; }
-    .carrossel-wrapper { position: relative; overflow: hidden; }
+    .genero {
+      margin: 20px;
+    }
+
+    .carrossel-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
     .carrossel {
       display: flex;
       gap: 10px;
@@ -108,7 +133,10 @@
       transition: transform 0.3s;
     }
 
-    .livro:hover { transform: scale(1.05); }
+    .livro:hover {
+      transform: scale(1.05);
+    }
+
     .livro img {
       width: 100%;
       height: 200px;
@@ -129,8 +157,13 @@
       border-radius: 50%;
     }
 
-    .btn-left { left: 5px; }
-    .btn-right { right: 5px; }
+    .btn-left {
+      left: 5px;
+    }
+
+    .btn-right {
+      right: 5px;
+    }
 
     /* Modal */
     #modal {
@@ -169,14 +202,15 @@
       cursor: pointer;
     }
 
-    button:hover { background: #0056b3; }
+    button:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body>
   <!-- Barra de Navegação -->
   <div class="navbar">
     <div class="logo">
-      <!-- Logo da Escola, substitua o caminho da imagem conforme necessário -->
       <img src="download.png" alt="Logo da Escola">
     </div>
     <div class="nav-links">
@@ -189,7 +223,7 @@
     </div>
   </div>
 
-  <!-- Banner com Imagem do GitHub -->
+  <!-- Banner -->
   <div class="banner"></div>
 
   <h1>Biblioteca Escolar</h1>
@@ -211,7 +245,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    // Cria o cliente Supabase
     const supabase = window.supabase.createClient(
       'https://uhohygfsqwpmymjhzirs.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVob2h5Z2ZzcXdwbXltamh6aXJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTM0NDEwNywiZXhwIjoyMDc0OTIwMTA3fQ.9iI1-fVvjV92HwwHRTafOwE6gWcn08QWARJKIvTucKc'
@@ -331,7 +364,6 @@
 
     select.addEventListener('change', () => renderCarrossel(select.value));
 
-    // Carrega livros ao iniciar
     renderCarrossel('Todos');
   </script>
 </body>
