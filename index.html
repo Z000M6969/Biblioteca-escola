@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Szymanski</title>
+  <title>Login / Cadastro Leia+</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { height: 100%; margin:0; font-family: Arial; background:#fff; }
@@ -15,14 +15,16 @@
     .btn:hover { background:#104e8b; }
     .msg { text-align:center; font-size:14px; color:#d9534f; }
     .msg.success { color:#28a745; }
+    .toggle-btn { text-align:center; font-size:14px; color:#1e90ff; cursor:pointer; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h2>Login</h2>
+    <h2 id="formTitle">Login</h2>
     <img src="download.png" alt="Logo da Escola" class="logo" />
 
+    <!-- Formulário de Login -->
     <form id="loginForm">
       <div class="field">
         <input type="email" id="loginEmail" placeholder="Email" required />
@@ -33,6 +35,26 @@
       <button type="submit" class="btn">Entrar</button>
       <div id="loginMsg" class="msg"></div>
     </form>
+
+    <!-- Formulário de Cadastro -->
+    <form id="signupForm" style="display: none;">
+      <div class="field">
+        <input type="email" id="signupEmail" placeholder="Email" required />
+      </div>
+      <div class="field">
+        <input type="text" id="signupCgm" placeholder="CGM" required />
+      </div>
+      <div class="field">
+        <input type="password" id="signupPass" placeholder="Senha" required />
+      </div>
+      <button type="submit" class="btn">Cadastrar</button>
+      <div id="signupMsg" class="msg"></div>
+    </form>
+
+    <!-- Link para alternar entre Login e Cadastro -->
+    <div class="toggle-btn" id="toggleForm">
+      <span>Não tem uma conta? <strong id="toggleText">Cadastre-se</strong></span>
+    </div>
   </div>
 
   <script type="module" src="login.js"></script>
