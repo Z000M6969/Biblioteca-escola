@@ -124,7 +124,7 @@ btnPesquisar.addEventListener('click', () => {
   const filtrados = livros.filter(l => 
     l.titulo.toLowerCase().includes(termo) || 
     l.genero.toLowerCase().includes(termo) ||
-    (l.autor && l.autor.toLowerCase().includes(termo))
+    l.autor && l.autor.toLowerCase().includes(termo))
   );
   exibirLivros(filtrados);
 });
