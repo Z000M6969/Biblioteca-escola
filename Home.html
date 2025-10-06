@@ -1,147 +1,137 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Biblioteca</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/supabase.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biblioteca Escolar</title>
   <style>
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body { font-family: Arial, sans-serif; background:#f9f9f9; color:#333; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f4f4; }
 
-    header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:#1e90ff; color:white; position:sticky; top:0; z-index:20; }
-    header img.logo { height:50px; }
-    nav { display:flex; gap:20px; }
-    nav a { color:white; font-size:20px; display:flex; justify-content:center; align-items:center; width:40px; height:40px; text-decoration:none; }
-    nav a:hover { color:#ffd700; }
+    h1 { text-align: center; margin: 20px 0; }
 
-    .banner { width:100%; height:300px; background:url('colorful-book-magazine-library-shelf-600nw-2419079741.webp') center/cover no-repeat; display:flex; justify-content:center; align-items:center; margin-bottom:30px; }
-    .banner h1 { color:white; font-size:36px; text-shadow:2px 2px 6px rgba(0,0,0,0.5); }
-
-    main { padding:20px; display:flex; flex-direction:column; align-items:center; }
-
-    .filtro { margin-bottom:30px; display:flex; justify-content:center; align-items:center; }
-    .filtro select { padding:8px; font-size:14px; border-radius:6px; border:1px solid #ccc; }
-
-    .genero { margin-bottom:60px; width:100%; max-width:1000px; }
-    .genero h2 { margin-bottom:10px; color:#1e90ff; text-align:left; }
-
-    .carrossel-wrapper { position:relative; width:100%; }
-    .carrossel { display:flex; overflow-x:auto; gap:16px; scroll-behavior:smooth; padding:10px 0; }
-    .carrossel::-webkit-scrollbar { display:none; }
-
-    .livro { flex-shrink:0; background:white; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; padding:10px; cursor: pointer; }
-    
-    /* Imagens padronizadas com altura maior que largura */
-    .livro img {
-      width: 120px;      /* largura fixa */
-      height: 200px;     /* altura maior que largura */
-      object-fit: cover; /* mantém proporção e corta se necessário */
-      border-radius: 4px;
-      margin-bottom: 8px;
+    #generoSelect {
+      display: block;
+      margin: 20px auto;
+      padding: 8px 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #aaa;
     }
-    
-    .livro p { font-weight:bold; font-size:14px; }
 
-    .btn-carrossel { position:absolute; top:50%; transform:translateY(-50%); background:rgba(30,144,255,0.8); color:white; border:none; padding:12px; border-radius:50%; cursor:pointer; font-size:18px; z-index:10; }
-    .btn-carrossel:hover { background: rgba(16,78,139,0.9); }
-    .btn-left { left:-20px; }
-    .btn-right { right:-20px; }
+    .genero { margin: 20px; }
+    .carrossel-wrapper { position: relative; overflow: hidden; }
+    .carrossel {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 10px;
+    }
 
-    /* Modal (janela pop-up) */
-    .modal {
-      display: none; /* Inicialmente escondido */
-      position: fixed;
-      top: 0;
-      left: 0;
+    .livro {
+      flex: 0 0 auto;
+      width: 150px;
+      text-align: center;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .livro:hover { transform: scale(1.05); }
+    .livro img {
       width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .btn-carrossel {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+    }
+
+    .btn-left { left: 5px; }
+    .btn-right { right: 5px; }
+
+    /* Modal */
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
       justify-content: center;
       align-items: center;
-      z-index: 1000;
     }
 
     .modal-content {
-      background-color: white;
+      background: white;
       padding: 20px;
-      border-radius: 8px;
-      width: 400px;
+      border-radius: 10px;
+      max-width: 400px;
       text-align: center;
+      position: relative;
     }
 
-    .modal .close {
+    .close {
       position: absolute;
       top: 10px;
-      right: 10px;
+      right: 15px;
       font-size: 20px;
       cursor: pointer;
-      color: #aaa;
     }
 
-    .modal .close:hover {
-      color: black;
-    }
-
-    .btnEmprestar {
+    button {
+      margin-top: 10px;
       padding: 8px 16px;
-      background-color: #28a745;
+      background: #007BFF;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
     }
 
-    .btnEmprestar:hover {
-      background-color: #218838;
-    }
+    button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
-  <header>
-    <img src="download.png" alt="Logo" class="logo">
-    <nav>
-      <a href="Home.html" title="Home"><i class="fas fa-home"></i></a>
-      <a href="pesquisa.html" title="Pesquisar"><i class="fas fa-search"></i></a>
-      <a href="usuario.html" title="Usuário"><i class="fas fa-user"></i></a>
-    </nav>
-  </header>
+  <h1>Biblioteca Escolar</h1>
+  <select id="generoSelect"></select>
+  <div id="carrosseisContainer"></div>
 
-  <div class="banner">
-    <h1>Bem-vindo(a) à Biblioteca Szymanski!</h1>
-  </div>
-
-  <main>
-    <div class="filtro">
-      <label for="generoSelect" style="margin-right:10px;">Escolha o gênero:</label>
-      <select id="generoSelect"></select>
-    </div>
-
-    <div id="carrosseisContainer"></div>
-  </main>
-
-  <!-- Modal -->
-  <div id="modal" class="modal">
+  <div id="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
-      <h3 id="livroTitulo"></h3>
+      <h2 id="livroTitulo"></h2>
       <p id="sinopse"></p>
-      <p><strong>Emprestar:</strong> <button id="btnEmprestar">Emprestar</button></p>
-      <p><strong>Data de Devolução:</strong> <span id="dataDevolucao"></span></p>
-      <p><strong>Estoque:</strong> <span id="estoque"></span></p>
+      <p id="estoque"></p>
+      <p><strong>Devolução:</strong> <span id="dataDevolucao"></span></p>
+      <button id="btnEmprestar">Emprestar</button>
     </div>
   </div>
 
+  <!-- Importa a biblioteca do Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-    const supabase = createClient(
-      'https://uhohygfsqwpmymjhzirs.supabase.co', 
+    // Cria o cliente Supabase
+    const supabase = window.supabase.createClient(
+      'https://uhohygfsqwpmymjhzirs.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVob2h5Z2ZzcXdwbXltamh6aXJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTM0NDEwNywiZXhwIjoyMDc0OTIwMTA3fQ.9iI1-fVvjV92HwwHRTafOwE6gWcn08QWARJKIvTucKc'
     );
 
     const generos = ['Todos', 'Aventura', 'Biografia', 'Clássicos', 'Conto', 'Crônica', 'Drama', 'Educação', 'Fantasia', 'Ficção Científica', 'Filosofia', 'História', 'Humor', 'Infantil', 'Mistério', 'Policial', 'Poesia', 'Romance', 'Terror', 'Autoajuda', 'Religião', 'Saúde', 'Tecnologia', 'Economia', 'Artes'];
     const select = document.getElementById('generoSelect');
-
     generos.forEach(g => {
       const opt = document.createElement('option');
       opt.value = g;
@@ -159,17 +149,13 @@
     const btnEmprestar = document.getElementById('btnEmprestar');
 
     async function renderCarrossel(genero) {
-      container.innerHTML = ''; // Limpa o container
+      container.innerHTML = '';
 
       try {
-        let query = supabase.from('livros').select('*'); 
-
-        if (genero !== 'Todos') {
-          query = query.eq('genero', genero);  // Filtra pelo gênero
-        }
+        let query = supabase.from('livros').select('*');
+        if (genero !== 'Todos') query = query.eq('genero', genero);
 
         const { data, error } = await query;
-
         if (error) {
           console.error('Erro ao carregar livros:', error);
           return;
@@ -178,39 +164,36 @@
         if (data && data.length > 0) {
           data.forEach(livro => createCarrossel(livro));
         } else {
-          container.innerHTML = "<p>Não há livros para este gênero.</p>";
+          container.innerHTML = "<p style='text-align:center;'>Não há livros para este gênero.</p>";
         }
       } catch (err) {
-        console.error('Erro ao carregar livros:', err);
+        console.error('Erro geral:', err);
       }
     }
 
     function createCarrossel(livro) {
       const sec = document.createElement('section');
       sec.className = 'genero';
-
       const h2 = document.createElement('h2');
       h2.textContent = 'Livros';
       sec.appendChild(h2);
 
       const wrapper = document.createElement('div');
       wrapper.className = 'carrossel-wrapper';
-
       const carrossel = document.createElement('div');
       carrossel.className = 'carrossel';
 
       const livroDiv = document.createElement('div');
       livroDiv.className = 'livro';
       const img = document.createElement('img');
-      img.src = livro.imagem || 'default.jpg'; // imagem padrão
+      img.src = livro.imagem || 'default.jpg';
       img.alt = livro.titulo;
       const p = document.createElement('p');
       p.textContent = livro.titulo;
+
       livroDiv.appendChild(img);
       livroDiv.appendChild(p);
-
       livroDiv.onclick = () => mostrarDetalhes(livro);
-
       carrossel.appendChild(livroDiv);
 
       const btnLeft = document.createElement('button');
@@ -234,6 +217,7 @@
       livroTitulo.textContent = livro.titulo;
       sinopse.textContent = livro.descricao || 'Descrição não disponível.';
       estoque.textContent = `${livro.quantidade} cópias disponíveis`;
+
       const dataAtual = new Date();
       const dataDevolucaoFormatted = new Date(dataAtual.setDate(dataAtual.getDate() + 7)).toLocaleDateString();
       dataDevolucao.textContent = dataDevolucaoFormatted;
@@ -241,15 +225,8 @@
       modal.style.display = 'flex';
     }
 
-    closeModal.onclick = () => {
-      modal.style.display = 'none';
-    };
-
-    window.onclick = (event) => {
-      if (event.target === modal) {
-        modal.style.display = 'none';
-      }
-    };
+    closeModal.onclick = () => (modal.style.display = 'none');
+    window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
 
     btnEmprestar.onclick = () => {
       alert('Livro emprestado com sucesso!');
@@ -257,8 +234,7 @@
     };
 
     select.addEventListener('change', () => renderCarrossel(select.value));
-
-    renderCarrossel('Todos'); // inicializa com todos os livros
+    renderCarrossel('Todos');
   </script>
 </body>
 </html>
