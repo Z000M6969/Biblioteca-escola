@@ -73,21 +73,47 @@
       background-image: url('colorful-book-magazine-library-shelf-600nw-2419079741.webp');
       background-size: cover;
       background-position: center;
+      margin-bottom: 20px;
     }
 
-    h1 { text-align: center; margin: 20px 0; }
+    h1 {
+      text-align: center;
+      margin: 10px 0 20px;
+      color: #003366;
+    }
+
+    /* Filtro */
+    .filtro-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 30px;
+      margin-bottom: 10px;
+    }
 
     #generoSelect {
-      display: block;
-      margin: 20px auto;
       padding: 8px 12px;
       font-size: 16px;
       border-radius: 8px;
       border: 1px solid #aaa;
+      outline: none;
     }
 
-    .genero { margin: 20px; }
-    .carrossel-wrapper { position: relative; overflow: hidden; }
+    /* Carrossel */
+    .genero {
+      margin: 30px 20px;
+    }
+
+    .genero h2 {
+      color: #007BFF;
+      margin-bottom: 10px;
+    }
+
+    .carrossel-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
     .carrossel {
       display: flex;
       gap: 10px;
@@ -108,11 +134,24 @@
     }
 
     .livro:hover { transform: scale(1.05); }
+
     .livro img {
       width: 100%;
       height: 200px;
       object-fit: cover;
       border-radius: 10px 10px 0 0;
+    }
+
+    .livro h3 {
+      font-size: 15px;
+      margin: 8px 0 4px;
+      color: #333;
+    }
+
+    .livro p {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
     }
 
     .btn-carrossel {
@@ -126,6 +165,7 @@
       cursor: pointer;
       padding: 8px;
       border-radius: 50%;
+      z-index: 10;
     }
 
     .btn-left { left: 5px; }
@@ -139,6 +179,7 @@
       background: rgba(0,0,0,0.6);
       justify-content: center;
       align-items: center;
+      z-index: 1000;
     }
 
     .modal-content {
@@ -170,8 +211,13 @@
 
     button:hover { background: #0056b3; }
 
+    /* Scroll invisível */
+    .carrossel::-webkit-scrollbar {
+      display: none;
+    }
   </style>
 </head>
+
 <body>
   <!-- Barra de Navegação -->
   <div class="navbar">
@@ -186,8 +232,8 @@
     </div>
 
     <div class="search">
-      <input type="text" placeholder="Pesquisar...">
-      <i class="fas fa-search"></i>
+      <input id="campo-pesquisa" type="text" placeholder="Pesquisar...">
+      <i class="fas fa-search" id="btn-pesquisar"></i>
     </div>
   </div>
 
@@ -195,9 +241,16 @@
   <div class="banner"></div>
 
   <h1>Biblioteca Escolar</h1>
-  <select id="generoSelect"></select>
+
+  <!-- Filtro -->
+  <div class="filtro-container">
+    <select id="generoSelect"></select>
+  </div>
+
+  <!-- Carrosseis -->
   <div id="carrosseisContainer"></div>
 
+  <!-- Modal -->
   <div id="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -209,19 +262,7 @@
     </div>
   </div>
 
-  <div class="topo">
-  <span id="usuario-nome"></span>
-  <button id="btn-sair">Sair</button>
-</div>
-
-<div class="barra-pesquisa">
-  <input type="text" id="campo-pesquisa" placeholder="Pesquisar por título ou gênero...">
-  <button id="btn-pesquisar">Pesquisar</button>
-</div>
-
-<div id="lista-livros" class="lista-livros"></div>
-
-<script type="module" src="./home.js"></script>
-
+  <!-- Script principal -->
+  <script type="module" src="./home.js"></script>
 </body>
 </html>
