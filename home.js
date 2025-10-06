@@ -53,17 +53,16 @@ function exibirLivros(lista) {
     `;
     const carrossel = wrapper.querySelector('.carrossel');
 
-    livrosPorGenero[genero].forEach(l => {
-      const item = document.createElement('div');
-      item.classList.add('livro');
-      item.innerHTML = `
-        <img src="${l.imagem || 'placeholder.jpg'}" alt="${l.titulo}">
-        <p>${l.titulo}</p>
-      `;
-      // Modal
-      item.addEventListener('click', () => abrirModal(l));
-      carrossel.appendChild(item);
-    });
+  livrosPorGenero[genero].forEach(l => {
+  const item = document.createElement('div');
+  item.classList.add('livro');
+  item.innerHTML = `
+    <img src="${l.imagem || 'placeholder.jpg'}" alt="${l.titulo}">
+    <p><strong>${l.titulo}</strong></p>
+    <p>${l.autor || 'Autor desconhecido'}</p>
+  `;
+  carrossel.appendChild(item);
+});
 
     // Rolagem carrossel
     wrapper.querySelector('.btn-left').addEventListener('click', () => carrossel.scrollBy({ left: -200, behavior: 'smooth' }));
