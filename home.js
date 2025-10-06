@@ -1,6 +1,6 @@
 import { supabase } from "./supabaseclient.js";
 
-// Função para verificar se o usuário está logado
+// ========== VERIFICAR LOGIN ==========
 async function verificarUsuario() {
   const { data, error } = await supabase.auth.getUser();
   if (error) {
@@ -10,7 +10,6 @@ async function verificarUsuario() {
 
   const user = data.user;
   if (!user) {
-    // Se não estiver logado, redireciona
     window.location.href = "Login.html";
   } else {
     const nomeUsuario = document.getElementById("usuario-nome");
@@ -18,100 +17,103 @@ async function verificarUsuario() {
   }
 }
 
-// Função para carregar todos os livros
-async function carregarLivros() {
+// ========== CARREGAR GÊNEROS ==========
+async function carregarGeneros() {
   const { data, error } = await supabase
     .from("livros")
-    .select("id, titulo, autor, genero, imagem_url");
+    .select("genero");
 
-  const lista = document.getElementById("lista-livros");
+  if (error) {
+    console.error("Erro ao buscar gêneros:", error.message);
+    return;
+  }
+
+  const generos = [...new Set(data.map(l => l.genero))].sort();
+  const select = document.getElementById("filtro-genero");
+  select.innerHTML = '<option value="">Todos os gêneros</option>';
+
+  generos.forEach(g => {
+    const option = document.createElement("option");
+    option.value = g;
+    option.textContent = g;
+    select.appendChild(option);
+  });
+}
+
+// ========== CARREGAR LIVROS ==========
+async function carregarLivros(filtroGenero = "", termo = "") {
+  let query = supabase.from("livros").select("id, titulo, autor, genero, imagem_url");
+
+  if (filtroGenero) query = query.eq("genero", filtroGenero);
+  if (termo) query = query.or(`titulo.ilike.%${termo}%,genero.ilike.%${termo}%`);
+
+  const { data, error } = await query;
+  const carrossel = document.getElementById("carrossel");
 
   if (error) {
     console.error("Erro ao carregar livros:", error.message);
-    lista.innerHTML = "<p>Erro ao carregar livros.</p>";
+    carrossel.innerHTML = "<p>Erro ao carregar livros.</p>";
     return;
   }
 
   if (!data || data.length === 0) {
-    lista.innerHTML = "<p>Nenhum livro encontrado.</p>";
+    carrossel.innerHTML = "<p>Nenhum livro encontrado.</p>";
     return;
   }
 
-  lista.innerHTML = "";
-  data.forEach((livro) => {
-    const card = document.createElement("div");
-    card.classList.add("livro-card");
-
-    card.innerHTML = `
-      <img src="${livro.imagem_url || 'https://via.placeholder.com/120x160?text=Sem+Imagem'}" alt="${livro.titulo}" class="livro-img">
-      <div class="livro-info">
-        <h3>${livro.titulo}</h3>
-        <p><b>Autor:</b> ${livro.autor}</p>
-        <p><b>Gênero:</b> ${livro.genero}</p>
-      </div>
+  carrossel.innerHTML = "";
+  data.forEach(livro => {
+    const item = document.createElement("div");
+    item.classList.add("livro-card");
+    item.innerHTML = `
+      <img src="${livro.imagem_url || 'https://via.placeholder.com/120x160?text=Sem+Imagem'}" alt="${livro.titulo}">
+      <h3>${livro.titulo}</h3>
+      <p>${livro.autor}</p>
+      <span>${livro.genero}</span>
     `;
-    lista.appendChild(card);
+    carrossel.appendChild(item);
   });
 }
 
-// Função para pesquisar livros por título ou gênero
-async function pesquisarLivros() {
+// ========== PESQUISAR ==========
+function pesquisar() {
   const termo = document.getElementById("campo-pesquisa").value.trim();
-
-  if (termo === "") {
-    carregarLivros();
-    return;
-  }
-
-  const { data, error } = await supabase
-    .from("livros")
-    .select("id, titulo, autor, genero, imagem_url")
-    .or(`titulo.ilike.%${termo}%,genero.ilike.%${termo}%`);
-
-  const lista = document.getElementById("lista-livros");
-  if (error) {
-    console.error("Erro ao pesquisar:", error.message);
-    lista.innerHTML = "<p>Erro na pesquisa.</p>";
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    lista.innerHTML = "<p>Nenhum resultado encontrado.</p>";
-    return;
-  }
-
-  lista.innerHTML = "";
-  data.forEach((livro) => {
-    const card = document.createElement("div");
-    card.classList.add("livro-card");
-
-    card.innerHTML = `
-      <img src="${livro.imagem_url || 'https://via.placeholder.com/120x160?text=Sem+Imagem'}" alt="${livro.titulo}" class="livro-img">
-      <div class="livro-info">
-        <h3>${livro.titulo}</h3>
-        <p><b>Autor:</b> ${livro.autor}</p>
-        <p><b>Gênero:</b> ${livro.genero}</p>
-      </div>
-    `;
-    lista.appendChild(card);
-  });
+  const genero = document.getElementById("filtro-genero").value;
+  carregarLivros(genero, termo);
 }
 
-// Função para sair do sistema
+// ========== SAIR ==========
 async function sair() {
   const { error } = await supabase.auth.signOut();
-  if (error) {
-    console.error("Erro ao sair:", error.message);
-  } else {
-    window.location.href = "Login.html";
-  }
+  if (error) console.error("Erro ao sair:", error.message);
+  else window.location.href = "Login.html";
 }
 
-// Inicialização
-document.addEventListener("DOMContentLoaded", () => {
-  verificarUsuario();
-  carregarLivros();
+// ========== CARROSSEL AUTOMÁTICO ==========
+function iniciarCarrossel() {
+  const carrossel = document.getElementById("carrossel");
+  let scrollAmount = 0;
+  setInterval(() => {
+    if (carrossel.scrollWidth - carrossel.clientWidth <= scrollAmount) {
+      scrollAmount = 0;
+    } else {
+      scrollAmount += 250;
+    }
+    carrossel.scrollTo({
+      left: scrollAmount,
+      behavior: "smooth"
+    });
+  }, 2500);
+}
 
-  document.getElementById("btn-pesquisar")?.addEventListener("click", pesquisarLivros);
+// ========== INICIALIZAÇÃO ==========
+document.addEventListener("DOMContentLoaded", async () => {
+  verificarUsuario();
+  await carregarGeneros();
+  await carregarLivros();
+  iniciarCarrossel();
+
+  document.getElementById("btn-pesquisar")?.addEventListener("click", pesquisar);
+  document.getElementById("filtro-genero")?.addEventListener("change", pesquisar);
   document.getElementById("btn-sair")?.addEventListener("click", sair);
 });
