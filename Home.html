@@ -133,128 +133,132 @@
     </div>
   </div>
 
-  <script>
-    const supabase = createClient('https://uhohygfsqwpmymjhzirs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVob2h5Z2ZzcXdwbXltamh6aXJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTM0NDEwNywiZXhwIjoyMDc0OTIwMTA3fQ.9iI1-fVvjV92HwwHRTafOwE6gWcn08QWARJKIvTucKc'); // Substitua com suas credenciais
+ <script>
+  // Conexão com o Supabase utilizando a chave de serviço (Service Role Key)
+  const supabase = createClient(
+    'https://uhohygfsqwpmymjhzirs.supabase.co', 
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVob2h5Z2ZzcXdwbXltamh6aXJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTM0NDEwNywiZXhwIjoyMDc0OTIwMTA3fQ.9iI1-fVvjV92HwwHRTafOwE6gWcn08QWARJKIvTucKc'
+  );
 
-    const generos = ['Todos', 'Aventura', 'Biografia', 'Clássicos', 'Conto', 'Crônica', 'Drama', 'Educação', 'Fantasia', 'Ficção Científica',
-      'Filosofia', 'História', 'Humor', 'Infantil', 'Mistério', 'Policial', 'Poesia', 'Romance', 'Terror', 'Autoajuda', 'Religião', 'Saúde', 'Tecnologia', 'Economia', 'Artes'];
+  const generos = ['Todos', 'Aventura', 'Biografia', 'Clássicos', 'Conto', 'Crônica', 'Drama', 'Educação', 'Fantasia', 'Ficção Científica',
+    'Filosofia', 'História', 'Humor', 'Infantil', 'Mistério', 'Policial', 'Poesia', 'Romance', 'Terror', 'Autoajuda', 'Religião', 'Saúde', 'Tecnologia', 'Economia', 'Artes'];
 
-    const select = document.getElementById('generoSelect');
-    generos.forEach(g => {
-      const opt = document.createElement('option');
-      opt.value = g;
-      opt.textContent = g;
-      select.appendChild(opt);
-    });
+  const select = document.getElementById('generoSelect');
+  generos.forEach(g => {
+    const opt = document.createElement('option');
+    opt.value = g;
+    opt.textContent = g;
+    select.appendChild(opt);
+  });
 
-    const container = document.getElementById('carrosseisContainer');
-    const modal = document.getElementById('modal');
-    const closeModal = document.querySelector('.close');
-    const livroTitulo = document.getElementById('livroTitulo');
-    const sinopse = document.getElementById('sinopse');
-    const dataDevolucao = document.getElementById('dataDevolucao');
-    const estoque = document.getElementById('estoque');
-    const btnEmprestar = document.getElementById('btnEmprestar');
+  const container = document.getElementById('carrosseisContainer');
+  const modal = document.getElementById('modal');
+  const closeModal = document.querySelector('.close');
+  const livroTitulo = document.getElementById('livroTitulo');
+  const sinopse = document.getElementById('sinopse');
+  const dataDevolucao = document.getElementById('dataDevolucao');
+  const estoque = document.getElementById('estoque');
+  const btnEmprestar = document.getElementById('btnEmprestar');
 
-    async function renderCarrossel(genero) {
-      container.innerHTML = ''; // Limpa o container
-      try {
-        let query = supabase.from('livros').select('*'); 
+  async function renderCarrossel(genero) {
+    container.innerHTML = ''; // Limpa o container
+    try {
+      let query = supabase.from('livros').select('*'); 
 
-        if (genero !== 'Todos') {
-          query = query.eq('genero', genero);  // Filtra pelo gênero selecionado
-        }
-
-        const { data, error } = await query;
-
-        if (error) {
-          console.error('Erro ao carregar livros:', error);
-          return;
-        }
-
-        if (data && data.length > 0) {
-          data.forEach(livro => createCarrossel(livro, genero));
-        } else {
-          container.innerHTML = "<p>Não há livros para este gênero.</p>";
-        }
-      } catch (err) {
-        console.error('Erro ao carregar livros:', err);
+      if (genero !== 'Todos') {
+        query = query.eq('genero', genero);  // Filtra pelo gênero selecionado
       }
-    }
 
-    function createCarrossel(livro, genero) {
-      const sec = document.createElement('section');
-      sec.className = 'genero';
-      const h2 = document.createElement('h2');
-      h2.textContent = genero;
-      sec.appendChild(h2);
+      const { data, error } = await query;
 
-      const wrapper = document.createElement('div');
-      wrapper.className = 'carrossel-wrapper';
-
-      const carrossel = document.createElement('div');
-      carrossel.className = 'carrossel';
-
-      const livroDiv = document.createElement('div');
-      livroDiv.className = 'livro';
-      const img = document.createElement('img');
-      img.src = livro.imagem || 'default.jpg'; // Caso não tenha imagem, usa uma imagem padrão
-      img.alt = livro.titulo;
-      const p = document.createElement('p');
-      p.textContent = livro.titulo;
-      livroDiv.appendChild(img);
-      livroDiv.appendChild(p);
-
-      livroDiv.onclick = () => mostrarDetalhes(livro);
-
-      carrossel.appendChild(livroDiv);
-
-      const btnLeft = document.createElement('button');
-      btnLeft.className = 'btn-carrossel btn-left';
-      btnLeft.innerHTML = '&#10094;';
-      btnLeft.onclick = () => carrossel.scrollBy({ left: -carrossel.clientWidth/2, behavior:'smooth' });
-
-      const btnRight = document.createElement('button');
-      btnRight.className = 'btn-carrossel btn-right';
-      btnRight.innerHTML = '&#10095;';
-      btnRight.onclick = () => carrossel.scrollBy({ left: carrossel.clientWidth/2, behavior:'smooth' });
-
-      wrapper.appendChild(btnLeft);
-      wrapper.appendChild(carrossel);
-      wrapper.appendChild(btnRight);
-      sec.appendChild(wrapper);
-      container.appendChild(sec);
-    }
-
-    function mostrarDetalhes(livro) {
-      livroTitulo.textContent = livro.titulo;
-      sinopse.textContent = livro.descricao || 'Descrição não disponível.';
-      estoque.textContent = `${livro.quantidade} cópias disponíveis`; 
-      const dataAtual = new Date();
-      const dataDevolucaoFormatted = new Date(dataAtual.setDate(dataAtual.getDate() + 7)).toLocaleDateString();
-      dataDevolucao.textContent = dataDevolucaoFormatted;
-
-      modal.style.display = 'flex';
-    }
-
-    closeModal.onclick = () => {
-      modal.style.display = 'none';
-    };
-
-    window.onclick = (event) => {
-      if (event.target === modal) {
-        modal.style.display = 'none';
+      if (error) {
+        console.error('Erro ao carregar livros:', error);
+        return;
       }
-    };
 
-    btnEmprestar.onclick = () => {
-      alert('Livro emprestado com sucesso!');
+      if (data && data.length > 0) {
+        data.forEach(livro => createCarrossel(livro, genero));
+      } else {
+        container.innerHTML = "<p>Não há livros para este gênero.</p>";
+      }
+    } catch (err) {
+      console.error('Erro ao carregar livros:', err);
+    }
+  }
+
+  function createCarrossel(livro, genero) {
+    const sec = document.createElement('section');
+    sec.className = 'genero';
+    const h2 = document.createElement('h2');
+    h2.textContent = genero;
+    sec.appendChild(h2);
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'carrossel-wrapper';
+
+    const carrossel = document.createElement('div');
+    carrossel.className = 'carrossel';
+
+    const livroDiv = document.createElement('div');
+    livroDiv.className = 'livro';
+    const img = document.createElement('img');
+    img.src = livro.imagem || 'default.jpg'; // Caso não tenha imagem, usa uma imagem padrão
+    img.alt = livro.titulo;
+    const p = document.createElement('p');
+    p.textContent = livro.titulo;
+    livroDiv.appendChild(img);
+    livroDiv.appendChild(p);
+
+    livroDiv.onclick = () => mostrarDetalhes(livro);
+
+    carrossel.appendChild(livroDiv);
+
+    const btnLeft = document.createElement('button');
+    btnLeft.className = 'btn-carrossel btn-left';
+    btnLeft.innerHTML = '&#10094;';
+    btnLeft.onclick = () => carrossel.scrollBy({ left: -carrossel.clientWidth / 2, behavior: 'smooth' });
+
+    const btnRight = document.createElement('button');
+    btnRight.className = 'btn-carrossel btn-right';
+    btnRight.innerHTML = '&#10095;';
+    btnRight.onclick = () => carrossel.scrollBy({ left: carrossel.clientWidth / 2, behavior: 'smooth' });
+
+    wrapper.appendChild(btnLeft);
+    wrapper.appendChild(carrossel);
+    wrapper.appendChild(btnRight);
+    sec.appendChild(wrapper);
+    container.appendChild(sec);
+  }
+
+  function mostrarDetalhes(livro) {
+    livroTitulo.textContent = livro.titulo;
+    sinopse.textContent = livro.descricao || 'Descrição não disponível.';
+    estoque.textContent = `${livro.quantidade} cópias disponíveis`; 
+    const dataAtual = new Date();
+    const dataDevolucaoFormatted = new Date(dataAtual.setDate(dataAtual.getDate() + 7)).toLocaleDateString();
+    dataDevolucao.textContent = dataDevolucaoFormatted;
+
+    modal.style.display = 'flex';
+  }
+
+  closeModal.onclick = () => {
+    modal.style.display = 'none';
+  };
+
+  window.onclick = (event) => {
+    if (event.target === modal) {
       modal.style.display = 'none';
-    };
+    }
+  };
 
-    select.addEventListener('change', () => renderCarrossel(select.value));
+  btnEmprestar.onclick = () => {
+    alert('Livro emprestado com sucesso!');
+    modal.style.display = 'none';
+  };
 
-    renderCarrossel('Todos'); // inicializa mostrando todos
-  </script>
+  select.addEventListener('change', () => renderCarrossel(select.value));
+
+  renderCarrossel('Todos'); // inicializa mostrando todos
+</script>
 </body>
 </html>
