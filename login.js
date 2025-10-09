@@ -19,17 +19,14 @@ if (signupForm) {
     const cgm = document.getElementById("signupCgm").value.trim();
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { cgm } }
-      });
+      const { data, error } = await supabase
+        .from('usuarios')
+        .insert([{ email, senha: password, cgm }]);
+      
       if (error) throw error;
 
-      // Mensagem de sucesso
-      showMsg(signupMsg, "Cadastro realizado! Verifique seu email.", "success");
+      showMsg(signupMsg, "Cadastro realizado com sucesso!", "success");
       signupForm.reset();
-
     } catch (err) {
       showMsg(signupMsg, "Erro: " + err.message, "error");
       console.error("Cadastro erro:", err);
@@ -49,15 +46,18 @@ if (loginForm) {
     const password = document.getElementById("loginPass").value;
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      if (!data.session) throw new Error("Sessão não iniciada. Verifique suas credenciais.");
+      const { data, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('email', email)
+        .eq('senha', password)
+        .single();
+      
+      if (error || !data) throw new Error("Email ou senha incorretos.");
 
       showMsg(loginMsg, "Login realizado com sucesso!", "success");
 
-      // Redireciona após login
       setTimeout(() => window.location.href = "Home.html", 500);
-
     } catch (err) {
       showMsg(loginMsg, "Erro: " + err.message, "error");
       console.error("Login erro:", err);
@@ -84,4 +84,3 @@ document.getElementById("toggleForm").addEventListener("click", () => {
     toggleText.textContent = "Não tem uma conta? Cadastre-se";
   }
 });
-
