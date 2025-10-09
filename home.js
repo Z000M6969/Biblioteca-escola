@@ -75,6 +75,7 @@ function exibirLivros(lista) {
 // 🔹 Modal
 const modal = document.getElementById('modal');
 const livroTitulo = document.getElementById('livroTitulo');
+const livroImagem = document.getElementById('livroImagem'); // nova referência
 const sinopse = document.getElementById('sinopse');
 const estoque = document.getElementById('estoque');
 const dataDevolucao = document.getElementById('dataDevolucao');
@@ -83,6 +84,8 @@ const closeModal = document.querySelector('.close');
 
 function abrirModal(livro) {
   livroTitulo.textContent = livro.titulo;
+  livroImagem.src = livro.imagem || 'placeholder.png'; // imagem do livro ou placeholder
+  livroImagem.alt = livro.titulo;
   sinopse.textContent = livro.sinopse || "Sem sinopse";
   estoque.textContent = `Em estoque: ${livro.estoque}`;
   dataDevolucao.textContent = livro.data_devolucao || 'Não disponível';
@@ -95,18 +98,7 @@ btnEmprestar.addEventListener('click', async () => {
   const livroId = livroTitulo.textContent;
   const { error } = await supabase
     .from('livros')
-    .update({ estoque: supabase.raw('estoque - 1') })
-    .eq('titulo', livroId);
-  
-  if (error) {
-    alert('Erro ao realizar o empréstimo!');
-    console.error(error);
-  } else {
-    alert('Livro emprestado com sucesso!');
-    modal.style.display = 'none';
-    carregarLivros();
-  }
-});
+    .update({ estoque: supabase.
 
 // 🔹 Filtrar por gênero
 generoSelect.addEventListener('change', () => {
