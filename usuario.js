@@ -3,6 +3,7 @@ import { supabase } from "./supabaseClient.js";
 async function init() {
   console.log("[init] start");
 
+  // Observa mudanças de sessão
   supabase.auth.onAuthStateChange((event, session) => {
     console.log("[onAuthStateChange]", event, session);
     if (!session) {
@@ -11,6 +12,7 @@ async function init() {
     }
   });
 
+  // Se a URL vier com hash (OAuth), tenta parsear
   try {
     if (location.hash.includes("access_token") || location.hash.includes("refresh_token")) {
       console.log("[init] detectei tokens na URL");
@@ -26,6 +28,7 @@ async function init() {
 
 async function loadUser() {
   try {
+    // Pega sessão e usuário
     const { data: { session } } = await supabase.auth.getSession();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -38,30 +41,33 @@ async function loadUser() {
       return;
     }
 
-    // Perfil
+    // Busca perfil do usuário na tabela 'usuario'
     const { data: profile, error: profileError } = await supabase
-      .from("profiles")
+      .from("usuario")       // ⚠️ nome da tabela ajustado
       .select("*")
-      .eq("user_id", user.id)
+      .eq("id", user.id)     // ⚠️ coluna que armazena o id do auth
       .maybeSingle();
 
-    console.log("[loadUser] profile:", profile, "profileError:", profileError);
+    if (profileError) console.error("[loadUser] profileError:", profileError);
+    console.log("[loadUser] profile:", profile);
 
     const displayName = profile?.name || user.user_metadata?.full_name || (user.email || "").split("@")[0] || "Usuário";
 
+    // Atualiza DOM
     document.getElementById("userName").textContent = displayName;
     document.getElementById("userEmail").textContent = user.email || "";
     document.getElementById("userCGM").textContent = profile?.cgm || "CGM não encontrado";
     document.getElementById("userPhoto").src = profile?.avatar_url || "gatinho-rock.png";
 
-    // Livro emprestado
+    // Busca livro emprestado na tabela 'livros_emprestados'
     const { data: livro, error: livroError } = await supabase
       .from("livros_emprestados")
       .select("titulo, data_devolucao")
       .eq("usuario_id", user.id)
       .maybeSingle();
 
-    console.log("[loadUser] livro:", livro, "livroError:", livroError);
+    if (livroError) console.error("[loadUser] livroError:", livroError);
+    console.log("[loadUser] livro:", livro);
 
     document.getElementById("bookTitle").textContent = livro?.titulo || "Nenhum livro emprestado";
     document.getElementById("dueDate").textContent = `Data de devolução: ${livro?.data_devolucao || "Não definida"}`;
