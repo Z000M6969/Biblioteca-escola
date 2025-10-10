@@ -98,7 +98,18 @@ btnEmprestar.addEventListener('click', async () => {
   const livroId = livroTitulo.textContent;
   const { error } = await supabase
     .from('livros')
-    .update({ estoque: supabase.
+        .update({ estoque: supabase.raw('estoque - 1') })
+    .eq('titulo', livroId);
+  
+  if (error) {
+    alert('Erro ao realizar o empréstimo!');
+    console.error(error);
+  } else {
+    alert('Livro emprestado com sucesso!');
+    modal.style.display = 'none';
+    carregarLivros();
+  }
+});
 
 // 🔹 Filtrar por gênero
 generoSelect.addEventListener('change', () => {
