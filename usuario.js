@@ -6,9 +6,13 @@ async function init() {
   // Observa mudanças de sessão
   supabase.auth.onAuthStateChange((event, session) => {
     console.log("[onAuthStateChange]", event, session);
+    if (!session) {
+      console.warn("[onAuthStateChange] sem sessão -> redirect");
+      window.location.href = "index.html";
+    }
   });
 
-  // Tenta parsear hash de OAuth
+  // Se a URL vier com hash (OAuth), tenta parsear
   try {
     if (location.hash.includes("access_token") || location.hash.includes("refresh_token")) {
       console.log("[init] detectei tokens na URL");
@@ -32,23 +36,23 @@ async function loadUser() {
     console.log("[loadUser] USER:", user);
 
     if (!user) {
-      console.warn("[loadUser] usuário não encontrado.");
-      return; // não redireciona automaticamente
+      console.warn("[loadUser] usuário não encontrado, redirecionando...");
+      window.location.href = "index.html";
+      return;
     }
 
-    // --- Busca perfil na tabela 'usuario' ---
-    // Certifique-se de que a coluna que referencia o auth é "user_id"
+    // --- Busca perfil na tabela 'usuario' usando coluna correta 'id' ---
     const { data: profile, error: profileError } = await supabase
       .from("usuario")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("id", user.id)   // ✅ aqui usamos 'id' que é UUID
       .maybeSingle();
 
     if (profileError) {
       console.error("[loadUser] profileError:", profileError);
     }
     if (!profile) {
-      console.warn("[loadUser] Nenhum perfil encontrado na tabela 'usuario' para este user_id:", user.id);
+      console.warn("[loadUser] Nenhum perfil encontrado para este id:", user.id);
     }
     console.log("[loadUser] profile:", profile);
 
@@ -86,12 +90,15 @@ async function loadUser() {
           alert("Erro ao deslogar: " + error.message);
         } else {
           console.log("[logout] Usuário deslogado com sucesso.");
+          window.location.href = "index.html";
         }
       });
     }
 
   } catch (err) {
     console.error("[loadUser] erro capturado:", err);
+    const errEl = document.getElementById("errorMsg");
+    if (errEl) errEl.textContent = "Erro ao carregar perfil. Veja o console.";
   }
 }
 
