@@ -7,12 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     /* Estilos Gerais */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Roboto', sans-serif;
       background: #f4f7fb;
@@ -24,7 +19,6 @@
       padding: 20px;
       flex-direction: column;
     }
-
     a {
       text-decoration: none;
       color: #1e90ff;
@@ -33,28 +27,17 @@
       margin-bottom: 20px;
       transition: color 0.3s ease;
     }
-
-    a:hover {
-      color: #0056b3;
-    }
-
-    /* Container Principal */
+    a:hover { color: #0056b3; }
     .user-container {
-      background: #ffffff;
+      background: #fff;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       padding: 30px;
       width: 100%;
       max-width: 350px;
       text-align: center;
     }
-
-    .logo img {
-      width: 180px;
-      margin-bottom: 20px;
-    }
-
-    /* Foto do Usuário */
+    .logo img { width: 180px; margin-bottom: 20px; }
     .user-photo {
       width: 120px;
       height: 120px;
@@ -62,42 +45,12 @@
       object-fit: cover;
       margin-bottom: 20px;
     }
-
-    /* Informações do Usuário */
-    .user-profile h2 {
-      font-size: 22px;
-      color: #1e90ff;
-      margin-bottom: 10px;
-    }
-
-    .user-profile p {
-      font-size: 16px;
-      color: #666;
-      margin-top: 5px;
-    }
-
-    .user-profile p strong {
-      font-weight: bold;
-    }
-
-    /* Informações do Livro Emprestado */
-    .book-info {
-      margin-top: 30px;
-      text-align: left;
-    }
-
-    .book-info h3 {
-      font-size: 18px;
-      color: #333;
-    }
-
-    .book-info p {
-      font-size: 14px;
-      color: #555;
-      margin-top: 5px;
-    }
-
-    /* Botão Logout */
+    .user-profile h2 { font-size: 22px; color: #1e90ff; margin-bottom: 10px; }
+    .user-profile p { font-size: 16px; color: #666; margin-top: 5px; }
+    .user-profile p strong { font-weight: bold; }
+    .book-info { margin-top: 30px; text-align: left; }
+    .book-info h3 { font-size: 18px; color: #333; }
+    .book-info p { font-size: 14px; color: #555; margin-top: 5px; }
     .logout-btn {
       background: #e63946;
       color: white;
@@ -109,17 +62,8 @@
       font-size: 16px;
       transition: background 0.3s ease;
     }
-
-    .logout-btn:hover {
-      background: #d82b35;
-    }
-
-    /* Estilo Responsivo */
-    @media (max-width: 600px) {
-      .user-container {
-        width: 90%;
-      }
-    }
+    .logout-btn:hover { background: #d82b35; }
+    @media (max-width: 600px) { .user-container { width: 90%; } }
   </style>
 </head>
 <body>
@@ -128,143 +72,92 @@
 
   <!-- Container do Usuário -->
   <div class="user-container">
-    <!-- Logo da Biblioteca -->
     <div class="logo">
       <img src="download.png" alt="Biblioteca Szymanski">
     </div>
 
-    <!-- Foto do Usuário -->
     <img src="gatinho-rock.png" alt="Gatinho do Rock" id="userPhoto" class="user-photo">
 
-    <!-- Informações do Usuário -->
     <div class="user-profile">
       <h2 id="userName">Carregando...</h2>
       <p id="userEmail">Carregando...</p>
       <p id="userCGM">CGM: Carregando...</p>
     </div>
 
-    <!-- Livro Emprestado e Data de Devolução -->
     <div class="book-info">
       <h3>Livro Emprestado:</h3>
       <p id="bookTitle">Carregando...</p>
       <p id="dueDate">Data de devolução: Carregando...</p>
     </div>
 
-    <!-- Botão Logout -->
     <button id="logoutBtn" class="logout-btn">Sair</button>
   </div>
 
-  <!-- Supabase JS -->
   <script type="module">
-    import { supabase } from "./supabaseClient.js";
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabaseUrl = "https://uhohygfsqwpmymjhzirs.supabase.co";
+    const supabaseAnonKey = "YOUR_ANON_KEY_HERE"; // substitua pelo seu anon key
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: { persistSession: true, detectSessionInUrl: true }
+    });
 
     async function init() {
-      console.log("[init] start");
-
-      // Log de mudanças de auth
-      supabase.auth.onAuthStateChange((event, session) => {
-        console.log("[onAuthStateChange]", event, session);
-        if (!session) {
-          console.warn("[onAuthStateChange] sem sessão -> redirect");
-          window.location.href = "index.html";
-        }
-      });
-
-      // Se a URL vier com hash do provider (oauth), tenta parsear a sessão
       try {
+        // Processa tokens OAuth na URL (se houver)
         if (location.hash.includes("access_token") || location.hash.includes("refresh_token")) {
-          console.log("[init] detectei tokens na URL, chamando getSessionFromUrl()");
-          await supabase.auth.getSessionFromUrl().catch(e => console.warn("getSessionFromUrl falhou:", e));
-          // limpa hash sem recarregar
+          await supabase.auth.getSessionFromUrl().catch(console.warn);
           history.replaceState(null, "", location.pathname + location.search);
         }
-      } catch (e) {
-        console.warn("[init] erro ao processar hash", e);
-      }
 
-      await loadUser();
-    }
+        // Listener para mudanças de auth
+        supabase.auth.onAuthStateChange((event, session) => {
+          if (!session) window.location.href = "index.html";
+        });
 
-    async function loadUser() {
-      try {
-        console.log("[loadUser] getSession & getUser...");
-        const sessionResult = await supabase.auth.getSession();
-        console.log("[loadUser] getSession ->", sessionResult);
+        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { user } } = await supabase.auth.getUser();
 
-        const userResult = await supabase.auth.getUser();
-        console.log("[loadUser] getUser ->", userResult);
-
-        // tentar obter usuário tanto por getUser() quanto por session
-        const user = userResult?.data?.user || sessionResult?.data?.session?.user;
         if (!user) {
-          console.warn("[loadUser] nenhum usuário encontrado, redirecionando...");
           window.location.href = "index.html";
           return;
         }
 
-        // Busca o perfil — uso maybeSingle pra não falhar se não houver linha
-        const { data: profile, error: profileError, status } = await supabase
+        // Busca perfil do usuário
+        const { data: profile } = await supabase
           .from("profiles")
           .select("*")
           .eq("user_id", user.id)
           .maybeSingle();
 
-        console.log("[loadUser] profile fetch ->", { profile, profileError, status });
-
-        if (profileError) {
-          console.error("[loadUser] profileError", profileError);
-          throw profileError;
-        }
-
-        // Se não tiver perfil, cria um temporário no front (opcional: gravar no banco)
-        const displayName = profile?.name || user.user_metadata?.full_name || (user.email || "").split("@")[0] || "Usuário";
-
         // Atualiza DOM
-        const elName = document.getElementById("userName");
-        const elEmail = document.getElementById("userEmail");
-        const elCGM = document.getElementById("userCGM");
-        const elPhoto = document.getElementById("userPhoto");
-        const logoutBtn = document.getElementById("logoutBtn");
+        document.getElementById("userName").textContent = profile?.name || user.user_metadata?.full_name || (user.email?.split("@")[0]) || "Usuário";
+        document.getElementById("userEmail").textContent = user.email || "";
+        document.getElementById("userCGM").textContent = profile?.cgm || "CGM não encontrado";
+        document.getElementById("userPhoto").src = profile?.avatar_url || "gatinho-rock.png";
 
-        if (elName) elName.textContent = displayName;
-        if (elEmail) elEmail.textContent = user.email || "";
-        if (elCGM) elCGM.textContent = profile?.cgm || "CGM não encontrado";
-        if (elPhoto) elPhoto.src = profile?.avatar_url || "gatinho-rock.png";
-
-        // Carregar livro emprestado
-        const { data: livroEmprestado, error: livroError } = await supabase
+        // Carrega livro emprestado
+        const { data: livroEmprestado } = await supabase
           .from("livros_emprestados")
           .select("titulo, data_devolucao")
           .eq("usuario_id", user.id)
           .single();
 
-        if (livroError) {
-          console.error("[loadUser] erro ao buscar livro emprestado:", livroError);
-        } else {
-          const elLivroTitulo = document.getElementById("bookTitle");
-          const elDataDevolucao = document.getElementById("dueDate");
-          if (elLivroTitulo) elLivroTitulo.textContent = livroEmprestado?.titulo || "Nenhum livro emprestado";
-          if (elDataDevolucao) elDataDevolucao.textContent = `Data de devolução: ${livroEmprestado?.data_devolucao || "Não definida"}`;
-        }
+        document.getElementById("bookTitle").textContent = livroEmprestado?.titulo || "Nenhum livro emprestado";
+        document.getElementById("dueDate").textContent = `Data de devolução: ${livroEmprestado?.data_devolucao || "Não definida"}`;
 
-        if (logoutBtn) {
-          logoutBtn.addEventListener("click", async () => {
-            const { error } = await supabase.auth.signOut();
-            if (error) {
-              console.error("[logout] erro:", error);
-              alert("Erro ao deslogar: " + error.message);
-            } else {
-              window.location.href = "index.html";
-            }
-          });
-        } else {
-          console.warn("[loadUser] botão logout não encontrado no DOM (#logoutBtn)");
-        }
+        // Logout
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+          const { error } = await supabase.auth.signOut();
+          if (error) {
+            alert("Erro ao deslogar: " + error.message);
+          } else {
+            window.location.href = "index.html";
+          }
+        });
 
       } catch (err) {
-        console.error("[loadUser] erro capturado:", err);
-        const errEl = document.getElementById("errorMsg");
-        if (errEl) errEl.textContent = "Erro ao carregar perfil. Veja o console.";
+        console.error("[init] erro:", err);
         window.location.href = "index.html";
       }
     }
