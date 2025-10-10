@@ -12,7 +12,7 @@ async function init() {
     }
   });
 
-  // Se a URL vier com hash (OAuth), tenta parsear
+  // Se a URL tiver hash (OAuth), tenta parsear
   try {
     if (location.hash.includes("access_token") || location.hash.includes("refresh_token")) {
       console.log("[init] detectei tokens na URL");
@@ -28,7 +28,6 @@ async function init() {
 
 async function loadUser() {
   try {
-    // Pega sessão e usuário
     const { data: { session } } = await supabase.auth.getSession();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -41,33 +40,30 @@ async function loadUser() {
       return;
     }
 
-    // Busca perfil do usuário na tabela 'usuario'
+    // Tenta puxar perfil da tabela 'usuario'
     const { data: profile, error: profileError } = await supabase
-      .from("usuario")       // ⚠️ nome da tabela ajustado
+      .from("usuario")
       .select("*")
-      .eq("id", user.id)     // ⚠️ coluna que armazena o id do auth
+      .eq("user_id", user.id) // ajuste aqui conforme a coluna na sua tabela
       .maybeSingle();
 
-    if (profileError) console.error("[loadUser] profileError:", profileError);
-    console.log("[loadUser] profile:", profile);
+    console.log("[loadUser] profile:", profile, "profileError:", profileError);
 
     const displayName = profile?.name || user.user_metadata?.full_name || (user.email || "").split("@")[0] || "Usuário";
 
-    // Atualiza DOM
     document.getElementById("userName").textContent = displayName;
     document.getElementById("userEmail").textContent = user.email || "";
     document.getElementById("userCGM").textContent = profile?.cgm || "CGM não encontrado";
     document.getElementById("userPhoto").src = profile?.avatar_url || "gatinho-rock.png";
 
-    // Busca livro emprestado na tabela 'livros_emprestados'
+    // Livro emprestado
     const { data: livro, error: livroError } = await supabase
       .from("livros_emprestados")
       .select("titulo, data_devolucao")
       .eq("usuario_id", user.id)
       .maybeSingle();
 
-    if (livroError) console.error("[loadUser] livroError:", livroError);
-    console.log("[loadUser] livro:", livro);
+    console.log("[loadUser] livro:", livro, "livroError:", livroError);
 
     document.getElementById("bookTitle").textContent = livro?.titulo || "Nenhum livro emprestado";
     document.getElementById("dueDate").textContent = `Data de devolução: ${livro?.data_devolucao || "Não definida"}`;
