@@ -5,6 +5,21 @@ const container = document.getElementById('carrosseisContainer');
 const pesquisaInput = document.getElementById('campo-pesquisa');
 const btnPesquisar = document.getElementById('btn-pesquisar');
 
+// 🔒 Verificar se há usuário logado
+async function verificarSessao() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) {
+    // se não estiver logado, redireciona pro login
+    window.location.href = "login.html";
+  } else {
+    console.log("Usuário logado:", data.user.email);
+  }
+}
+
+// chama assim que a página carrega
+verificarSessao();
+
+
 let livros = [];
 
 // 🔹 Buscar livros do banco
