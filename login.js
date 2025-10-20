@@ -19,11 +19,20 @@ if (signupForm) {
     const cgm = document.getElementById("signupCgm").value.trim();
 
     try {
-      const { data, error } = await supabase
-        .from('usuarios')
-        .insert([{ email, senha: password, cgm }]);
-      
+      // ✅ Cadastro usando Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password
+      });
+
       if (error) throw error;
+
+      // Inserir campos extras na tabela 'usuarios'
+      const { error: extraError } = await supabase
+        .from('usuarios')
+        .insert([{ id: data.user.id, cgm }]); // vincula pelo id do Auth
+
+      if (extraError) throw extraError;
 
       showMsg(signupMsg, "Cadastro realizado com sucesso!", "success");
       signupForm.reset();
@@ -46,17 +55,17 @@ if (loginForm) {
     const password = document.getElementById("loginPass").value;
 
     try {
-      const { data, error } = await supabase
-        .from('usuarios')
-        .select('*')
-        .eq('email', email)
-        .eq('senha', password)
-        .single();
-      
-      if (error || !data) throw new Error("Email ou senha incorretos.");
+      // ✅ Login usando Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
 
       showMsg(loginMsg, "Login realizado com sucesso!", "success");
 
+      // Redireciona para Home
       setTimeout(() => window.location.href = "Home.html", 500);
     } catch (err) {
       showMsg(loginMsg, "Erro: " + err.message, "error");
