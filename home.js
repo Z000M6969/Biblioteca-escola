@@ -10,7 +10,7 @@ async function verificarSessao() {
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) {
     // se não estiver logado, redireciona pro login
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   } else {
     console.log("Usuário logado:", data.user.email);
   }
