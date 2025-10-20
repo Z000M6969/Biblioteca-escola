@@ -5,7 +5,8 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
-    persistSession: true,
-    autoRefreshToken: true
-  }
+    persistSession: true,        // ✅ Mantém login no localStorage
+    autoRefreshToken: true,      // ✅ Atualiza token sozinho
+    detectSessionInUrl: true     // ✅ Importante p/ login via URL (GitHub Pages)
+  },
 });
