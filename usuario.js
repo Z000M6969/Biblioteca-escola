@@ -72,7 +72,6 @@ async function loadUser() {
       profile?.name || user.user_metadata?.full_name || (user.email || "Usuário").split("@")[0];
     document.getElementById("userEmail").textContent = user.email || "";
     document.getElementById("userCGM").textContent = profile?.cgm || "CGM não encontrado";
-    document.getElementById("userPhoto").src = profile?.avatar_url || "gatinho-rock.png";
 
     // 🔸 Busca livro emprestado
     const { data: livro, error: livroError } = await supabase
